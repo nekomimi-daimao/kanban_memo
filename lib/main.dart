@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kanban_memo/memo_list.dart';
+import 'package:kanban_memo/model/memo_data.dart';
+import 'package:kanban_memo/widget/memo_card.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -9,7 +10,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,28 +17,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
+  final MemoData data = MemoData("title", "memo");
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,30 +39,13 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-          child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
-            MemoList(category: "category", data: []),
+          children: [
+            MemoCard(data: widget.data),
           ],
         ),
-      )),
+      ),
     );
   }
 }
