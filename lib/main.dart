@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kanban_memo/model/memo_data.dart';
 import 'package:kanban_memo/widget/memo_card.dart';
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        textTheme: GoogleFonts.sawarabiGothicTextTheme(),
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
