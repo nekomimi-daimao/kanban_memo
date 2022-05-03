@@ -1,8 +1,28 @@
-class MemoData {
-  String title;
-  String memo;
+import 'package:isar/isar.dart';
+import 'package:kanban_memo/model/board_data.dart';
+import 'package:kanban_memo/model/category_data.dart';
 
-  MemoData(this.title, this.memo);
+part 'memo_data.g.dart';
+
+@Collection()
+class MemoData {
+  @Id()
+  int? id;
+
+  int? boardId;
+  int? categoryId;
+
+  String title = "";
+  String memo = "";
+
+  MemoData({
+    required this.boardId,
+    required this.categoryId,
+  });
+
+  factory MemoData.create(BoardData boardData, CategoryData categoryData) {
+    return MemoData(boardId: boardData.id, categoryId: categoryData.id);
+  }
 
   @override
   String toString() {

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
-  final MemoData data = MemoData("title", "memo");
+  final MemoData data = MemoData(boardId: 0, categoryId: 0);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

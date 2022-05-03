@@ -1,12 +1,14 @@
 import 'package:isar/isar.dart';
 
-part 'board_data.g.dart';
+part 'category_data.g.dart';
 
 @Collection()
-class BoardData {
+class CategoryData {
   @Id()
   int? id;
 
-  String title = "";
+  int? boardId;
+
+  String category = "";
   late DateTime created;
 }
