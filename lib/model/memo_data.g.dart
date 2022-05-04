@@ -6,227 +6,210 @@ part of 'memo_data.dart';
 // IsarCollectionGenerator
 // **************************************************************************
 
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, unused_local_variable
 
 extension GetMemoDataCollection on Isar {
-  IsarCollection<MemoData> get memoDatas {
-    return getCollection('MemoData');
-  }
+  IsarCollection<MemoData> get memoDatas => getCollection();
 }
 
-final MemoDataSchema = CollectionSchema(
+const MemoDataSchema = CollectionSchema(
   name: 'MemoData',
   schema:
       '{"name":"MemoData","idName":"id","properties":[{"name":"boardId","type":"Long"},{"name":"categoryId","type":"Long"},{"name":"memo","type":"String"},{"name":"title","type":"String"}],"indexes":[],"links":[]}',
-  nativeAdapter: const _MemoDataNativeAdapter(),
-  webAdapter: const _MemoDataWebAdapter(),
   idName: 'id',
   propertyIds: {'boardId': 0, 'categoryId': 1, 'memo': 2, 'title': 3},
   listProperties: {},
   indexIds: {},
-  indexTypes: {},
+  indexValueTypes: {},
   linkIds: {},
-  backlinkIds: {},
-  linkedCollections: [],
-  getId: (obj) {
-    if (obj.id == Isar.autoIncrement) {
-      return null;
-    } else {
-      return obj.id;
-    }
-  },
-  setId: (obj, id) => obj.id = id,
-  getLinks: (obj) => [],
-  version: 2,
+  backlinkLinkNames: {},
+  getId: _memoDataGetId,
+  setId: _memoDataSetId,
+  getLinks: _memoDataGetLinks,
+  attachLinks: _memoDataAttachLinks,
+  serializeNative: _memoDataSerializeNative,
+  deserializeNative: _memoDataDeserializeNative,
+  deserializePropNative: _memoDataDeserializePropNative,
+  serializeWeb: _memoDataSerializeWeb,
+  deserializeWeb: _memoDataDeserializeWeb,
+  deserializePropWeb: _memoDataDeserializePropWeb,
+  version: 3,
 );
 
-class _MemoDataWebAdapter extends IsarWebTypeAdapter<MemoData> {
-  const _MemoDataWebAdapter();
-
-  @override
-  Object serialize(IsarCollection<MemoData> collection, MemoData object) {
-    final jsObj = IsarNative.newJsObject();
-    IsarNative.jsObjectSet(jsObj, 'boardId', object.boardId);
-    IsarNative.jsObjectSet(jsObj, 'categoryId', object.categoryId);
-    IsarNative.jsObjectSet(jsObj, 'id', object.id);
-    IsarNative.jsObjectSet(jsObj, 'memo', object.memo);
-    IsarNative.jsObjectSet(jsObj, 'title', object.title);
-    return jsObj;
+int? _memoDataGetId(MemoData object) {
+  if (object.id == Isar.autoIncrement) {
+    return null;
+  } else {
+    return object.id;
   }
-
-  @override
-  MemoData deserialize(IsarCollection<MemoData> collection, dynamic jsObj) {
-    final object = MemoData(
-      boardId: IsarNative.jsObjectGet(jsObj, 'boardId'),
-      categoryId: IsarNative.jsObjectGet(jsObj, 'categoryId'),
-    );
-    object.id = IsarNative.jsObjectGet(jsObj, 'id');
-    object.memo = IsarNative.jsObjectGet(jsObj, 'memo') ?? '';
-    object.title = IsarNative.jsObjectGet(jsObj, 'title') ?? '';
-    return object;
-  }
-
-  @override
-  P deserializeProperty<P>(Object jsObj, String propertyName) {
-    switch (propertyName) {
-      case 'boardId':
-        return (IsarNative.jsObjectGet(jsObj, 'boardId')) as P;
-      case 'categoryId':
-        return (IsarNative.jsObjectGet(jsObj, 'categoryId')) as P;
-      case 'id':
-        return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
-      case 'memo':
-        return (IsarNative.jsObjectGet(jsObj, 'memo') ?? '') as P;
-      case 'title':
-        return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
-      default:
-        throw 'Illegal propertyName';
-    }
-  }
-
-  @override
-  void attachLinks(Isar isar, int id, MemoData object) {}
 }
 
-class _MemoDataNativeAdapter extends IsarNativeTypeAdapter<MemoData> {
-  const _MemoDataNativeAdapter();
-
-  @override
-  void serialize(IsarCollection<MemoData> collection, IsarRawObject rawObj,
-      MemoData object, int staticSize, List<int> offsets, AdapterAlloc alloc) {
-    var dynamicSize = 0;
-    final value0 = object.boardId;
-    final _boardId = value0;
-    final value1 = object.categoryId;
-    final _categoryId = value1;
-    final value2 = object.memo;
-    final _memo = IsarBinaryWriter.utf8Encoder.convert(value2);
-    dynamicSize += (_memo.length) as int;
-    final value3 = object.title;
-    final _title = IsarBinaryWriter.utf8Encoder.convert(value3);
-    dynamicSize += (_title.length) as int;
-    final size = staticSize + dynamicSize;
-
-    rawObj.buffer = alloc(size);
-    rawObj.buffer_length = size;
-    final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
-    final writer = IsarBinaryWriter(buffer, staticSize);
-    writer.writeLong(offsets[0], _boardId);
-    writer.writeLong(offsets[1], _categoryId);
-    writer.writeBytes(offsets[2], _memo);
-    writer.writeBytes(offsets[3], _title);
-  }
-
-  @override
-  MemoData deserialize(IsarCollection<MemoData> collection, int id,
-      IsarBinaryReader reader, List<int> offsets) {
-    final object = MemoData(
-      boardId: reader.readLongOrNull(offsets[0]),
-      categoryId: reader.readLongOrNull(offsets[1]),
-    );
-    object.id = id;
-    object.memo = reader.readString(offsets[2]);
-    object.title = reader.readString(offsets[3]);
-    return object;
-  }
-
-  @override
-  P deserializeProperty<P>(
-      int id, IsarBinaryReader reader, int propertyIndex, int offset) {
-    switch (propertyIndex) {
-      case -1:
-        return id as P;
-      case 0:
-        return (reader.readLongOrNull(offset)) as P;
-      case 1:
-        return (reader.readLongOrNull(offset)) as P;
-      case 2:
-        return (reader.readString(offset)) as P;
-      case 3:
-        return (reader.readString(offset)) as P;
-      default:
-        throw 'Illegal propertyIndex';
-    }
-  }
-
-  @override
-  void attachLinks(Isar isar, int id, MemoData object) {}
+void _memoDataSetId(MemoData object, int id) {
+  object.id = id;
 }
+
+List<IsarLinkBase> _memoDataGetLinks(MemoData object) {
+  return [];
+}
+
+void _memoDataSerializeNative(
+    IsarCollection<MemoData> collection,
+    IsarRawObject rawObj,
+    MemoData object,
+    int staticSize,
+    List<int> offsets,
+    AdapterAlloc alloc) {
+  var dynamicSize = 0;
+  final value0 = object.boardId;
+  final _boardId = value0;
+  final value1 = object.categoryId;
+  final _categoryId = value1;
+  final value2 = object.memo;
+  final _memo = IsarBinaryWriter.utf8Encoder.convert(value2);
+  dynamicSize += (_memo.length) as int;
+  final value3 = object.title;
+  final _title = IsarBinaryWriter.utf8Encoder.convert(value3);
+  dynamicSize += (_title.length) as int;
+  final size = staticSize + dynamicSize;
+
+  rawObj.buffer = alloc(size);
+  rawObj.buffer_length = size;
+  final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
+  final writer = IsarBinaryWriter(buffer, staticSize);
+  writer.writeLong(offsets[0], _boardId);
+  writer.writeLong(offsets[1], _categoryId);
+  writer.writeBytes(offsets[2], _memo);
+  writer.writeBytes(offsets[3], _title);
+}
+
+MemoData _memoDataDeserializeNative(IsarCollection<MemoData> collection, int id,
+    IsarBinaryReader reader, List<int> offsets) {
+  final object = MemoData(
+    boardId: reader.readLongOrNull(offsets[0]),
+    categoryId: reader.readLongOrNull(offsets[1]),
+  );
+  object.id = id;
+  object.memo = reader.readString(offsets[2]);
+  object.title = reader.readString(offsets[3]);
+  return object;
+}
+
+P _memoDataDeserializePropNative<P>(
+    int id, IsarBinaryReader reader, int propertyIndex, int offset) {
+  switch (propertyIndex) {
+    case -1:
+      return id as P;
+    case 0:
+      return (reader.readLongOrNull(offset)) as P;
+    case 1:
+      return (reader.readLongOrNull(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    default:
+      throw 'Illegal propertyIndex';
+  }
+}
+
+dynamic _memoDataSerializeWeb(
+    IsarCollection<MemoData> collection, MemoData object) {
+  final jsObj = IsarNative.newJsObject();
+  IsarNative.jsObjectSet(jsObj, 'boardId', object.boardId);
+  IsarNative.jsObjectSet(jsObj, 'categoryId', object.categoryId);
+  IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(jsObj, 'memo', object.memo);
+  IsarNative.jsObjectSet(jsObj, 'title', object.title);
+  return jsObj;
+}
+
+MemoData _memoDataDeserializeWeb(
+    IsarCollection<MemoData> collection, dynamic jsObj) {
+  final object = MemoData(
+    boardId: IsarNative.jsObjectGet(jsObj, 'boardId'),
+    categoryId: IsarNative.jsObjectGet(jsObj, 'categoryId'),
+  );
+  object.id = IsarNative.jsObjectGet(jsObj, 'id');
+  object.memo = IsarNative.jsObjectGet(jsObj, 'memo') ?? '';
+  object.title = IsarNative.jsObjectGet(jsObj, 'title') ?? '';
+  return object;
+}
+
+P _memoDataDeserializePropWeb<P>(Object jsObj, String propertyName) {
+  switch (propertyName) {
+    case 'boardId':
+      return (IsarNative.jsObjectGet(jsObj, 'boardId')) as P;
+    case 'categoryId':
+      return (IsarNative.jsObjectGet(jsObj, 'categoryId')) as P;
+    case 'id':
+      return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
+    case 'memo':
+      return (IsarNative.jsObjectGet(jsObj, 'memo') ?? '') as P;
+    case 'title':
+      return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
+    default:
+      throw 'Illegal propertyName';
+  }
+}
+
+void _memoDataAttachLinks(IsarCollection col, int id, MemoData object) {}
 
 extension MemoDataQueryWhereSort on QueryBuilder<MemoData, MemoData, QWhere> {
   QueryBuilder<MemoData, MemoData, QAfterWhere> anyId() {
-    return addWhereClauseInternal(const WhereClause(indexName: null));
+    return addWhereClauseInternal(const IdWhereClause.any());
   }
 }
 
 extension MemoDataQueryWhere on QueryBuilder<MemoData, MemoData, QWhereClause> {
-  QueryBuilder<MemoData, MemoData, QAfterWhereClause> idEqualTo(int? id) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [id],
+  QueryBuilder<MemoData, MemoData, QAfterWhereClause> idEqualTo(int id) {
+    return addWhereClauseInternal(IdWhereClause.between(
+      lower: id,
       includeLower: true,
-      upper: [id],
+      upper: id,
       includeUpper: true,
     ));
   }
 
-  QueryBuilder<MemoData, MemoData, QAfterWhereClause> idNotEqualTo(int? id) {
+  QueryBuilder<MemoData, MemoData, QAfterWhereClause> idNotEqualTo(int id) {
     if (whereSortInternal == Sort.asc) {
-      return addWhereClauseInternal(WhereClause(
-        indexName: null,
-        upper: [id],
-        includeUpper: false,
-      )).addWhereClauseInternal(WhereClause(
-        indexName: null,
-        lower: [id],
-        includeLower: false,
-      ));
+      return addWhereClauseInternal(
+        IdWhereClause.lessThan(upper: id, includeUpper: false),
+      ).addWhereClauseInternal(
+        IdWhereClause.greaterThan(lower: id, includeLower: false),
+      );
     } else {
-      return addWhereClauseInternal(WhereClause(
-        indexName: null,
-        lower: [id],
-        includeLower: false,
-      )).addWhereClauseInternal(WhereClause(
-        indexName: null,
-        upper: [id],
-        includeUpper: false,
-      ));
+      return addWhereClauseInternal(
+        IdWhereClause.greaterThan(lower: id, includeLower: false),
+      ).addWhereClauseInternal(
+        IdWhereClause.lessThan(upper: id, includeUpper: false),
+      );
     }
   }
 
-  QueryBuilder<MemoData, MemoData, QAfterWhereClause> idGreaterThan(
-    int? id, {
-    bool include = false,
-  }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [id],
-      includeLower: include,
-    ));
+  QueryBuilder<MemoData, MemoData, QAfterWhereClause> idGreaterThan(int id,
+      {bool include = false}) {
+    return addWhereClauseInternal(
+      IdWhereClause.greaterThan(lower: id, includeLower: include),
+    );
   }
 
-  QueryBuilder<MemoData, MemoData, QAfterWhereClause> idLessThan(
-    int? id, {
-    bool include = false,
-  }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      upper: [id],
-      includeUpper: include,
-    ));
+  QueryBuilder<MemoData, MemoData, QAfterWhereClause> idLessThan(int id,
+      {bool include = false}) {
+    return addWhereClauseInternal(
+      IdWhereClause.lessThan(upper: id, includeUpper: include),
+    );
   }
 
   QueryBuilder<MemoData, MemoData, QAfterWhereClause> idBetween(
-    int? lowerId,
-    int? upperId, {
+    int lowerId,
+    int upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [lowerId],
+    return addWhereClauseInternal(IdWhereClause.between(
+      lower: lowerId,
       includeLower: includeLower,
-      upper: [upperId],
+      upper: upperId,
       includeUpper: includeUpper,
     ));
   }
@@ -354,8 +337,7 @@ extension MemoDataQueryFilter
     ));
   }
 
-  QueryBuilder<MemoData, MemoData, QAfterFilterCondition> idEqualTo(
-      int? value) {
+  QueryBuilder<MemoData, MemoData, QAfterFilterCondition> idEqualTo(int value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
       property: 'id',
@@ -364,7 +346,7 @@ extension MemoDataQueryFilter
   }
 
   QueryBuilder<MemoData, MemoData, QAfterFilterCondition> idGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -376,7 +358,7 @@ extension MemoDataQueryFilter
   }
 
   QueryBuilder<MemoData, MemoData, QAfterFilterCondition> idLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -388,8 +370,8 @@ extension MemoDataQueryFilter
   }
 
   QueryBuilder<MemoData, MemoData, QAfterFilterCondition> idBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {

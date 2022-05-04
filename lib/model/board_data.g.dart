@@ -6,217 +6,200 @@ part of 'board_data.dart';
 // IsarCollectionGenerator
 // **************************************************************************
 
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, unused_local_variable
 
 extension GetBoardDataCollection on Isar {
-  IsarCollection<BoardData> get boardDatas {
-    return getCollection('BoardData');
-  }
+  IsarCollection<BoardData> get boardDatas => getCollection();
 }
 
-final BoardDataSchema = CollectionSchema(
+const BoardDataSchema = CollectionSchema(
   name: 'BoardData',
   schema:
       '{"name":"BoardData","idName":"id","properties":[{"name":"created","type":"Long"},{"name":"title","type":"String"}],"indexes":[],"links":[]}',
-  nativeAdapter: const _BoardDataNativeAdapter(),
-  webAdapter: const _BoardDataWebAdapter(),
   idName: 'id',
   propertyIds: {'created': 0, 'title': 1},
   listProperties: {},
   indexIds: {},
-  indexTypes: {},
+  indexValueTypes: {},
   linkIds: {},
-  backlinkIds: {},
-  linkedCollections: [],
-  getId: (obj) {
-    if (obj.id == Isar.autoIncrement) {
-      return null;
-    } else {
-      return obj.id;
-    }
-  },
-  setId: (obj, id) => obj.id = id,
-  getLinks: (obj) => [],
-  version: 2,
+  backlinkLinkNames: {},
+  getId: _boardDataGetId,
+  setId: _boardDataSetId,
+  getLinks: _boardDataGetLinks,
+  attachLinks: _boardDataAttachLinks,
+  serializeNative: _boardDataSerializeNative,
+  deserializeNative: _boardDataDeserializeNative,
+  deserializePropNative: _boardDataDeserializePropNative,
+  serializeWeb: _boardDataSerializeWeb,
+  deserializeWeb: _boardDataDeserializeWeb,
+  deserializePropWeb: _boardDataDeserializePropWeb,
+  version: 3,
 );
 
-class _BoardDataWebAdapter extends IsarWebTypeAdapter<BoardData> {
-  const _BoardDataWebAdapter();
-
-  @override
-  Object serialize(IsarCollection<BoardData> collection, BoardData object) {
-    final jsObj = IsarNative.newJsObject();
-    IsarNative.jsObjectSet(
-        jsObj, 'created', object.created.toUtc().millisecondsSinceEpoch);
-    IsarNative.jsObjectSet(jsObj, 'id', object.id);
-    IsarNative.jsObjectSet(jsObj, 'title', object.title);
-    return jsObj;
+int? _boardDataGetId(BoardData object) {
+  if (object.id == Isar.autoIncrement) {
+    return null;
+  } else {
+    return object.id;
   }
-
-  @override
-  BoardData deserialize(IsarCollection<BoardData> collection, dynamic jsObj) {
-    final object = BoardData();
-    object.created = IsarNative.jsObjectGet(jsObj, 'created') != null
-        ? DateTime.fromMillisecondsSinceEpoch(
-                IsarNative.jsObjectGet(jsObj, 'created'),
-                isUtc: true)
-            .toLocal()
-        : DateTime.fromMillisecondsSinceEpoch(0);
-    object.id = IsarNative.jsObjectGet(jsObj, 'id');
-    object.title = IsarNative.jsObjectGet(jsObj, 'title') ?? '';
-    return object;
-  }
-
-  @override
-  P deserializeProperty<P>(Object jsObj, String propertyName) {
-    switch (propertyName) {
-      case 'created':
-        return (IsarNative.jsObjectGet(jsObj, 'created') != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                    IsarNative.jsObjectGet(jsObj, 'created'),
-                    isUtc: true)
-                .toLocal()
-            : DateTime.fromMillisecondsSinceEpoch(0)) as P;
-      case 'id':
-        return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
-      case 'title':
-        return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
-      default:
-        throw 'Illegal propertyName';
-    }
-  }
-
-  @override
-  void attachLinks(Isar isar, int id, BoardData object) {}
 }
 
-class _BoardDataNativeAdapter extends IsarNativeTypeAdapter<BoardData> {
-  const _BoardDataNativeAdapter();
-
-  @override
-  void serialize(IsarCollection<BoardData> collection, IsarRawObject rawObj,
-      BoardData object, int staticSize, List<int> offsets, AdapterAlloc alloc) {
-    var dynamicSize = 0;
-    final value0 = object.created;
-    final _created = value0;
-    final value1 = object.title;
-    final _title = IsarBinaryWriter.utf8Encoder.convert(value1);
-    dynamicSize += (_title.length) as int;
-    final size = staticSize + dynamicSize;
-
-    rawObj.buffer = alloc(size);
-    rawObj.buffer_length = size;
-    final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
-    final writer = IsarBinaryWriter(buffer, staticSize);
-    writer.writeDateTime(offsets[0], _created);
-    writer.writeBytes(offsets[1], _title);
-  }
-
-  @override
-  BoardData deserialize(IsarCollection<BoardData> collection, int id,
-      IsarBinaryReader reader, List<int> offsets) {
-    final object = BoardData();
-    object.created = reader.readDateTime(offsets[0]);
-    object.id = id;
-    object.title = reader.readString(offsets[1]);
-    return object;
-  }
-
-  @override
-  P deserializeProperty<P>(
-      int id, IsarBinaryReader reader, int propertyIndex, int offset) {
-    switch (propertyIndex) {
-      case -1:
-        return id as P;
-      case 0:
-        return (reader.readDateTime(offset)) as P;
-      case 1:
-        return (reader.readString(offset)) as P;
-      default:
-        throw 'Illegal propertyIndex';
-    }
-  }
-
-  @override
-  void attachLinks(Isar isar, int id, BoardData object) {}
+void _boardDataSetId(BoardData object, int id) {
+  object.id = id;
 }
+
+List<IsarLinkBase> _boardDataGetLinks(BoardData object) {
+  return [];
+}
+
+void _boardDataSerializeNative(
+    IsarCollection<BoardData> collection,
+    IsarRawObject rawObj,
+    BoardData object,
+    int staticSize,
+    List<int> offsets,
+    AdapterAlloc alloc) {
+  var dynamicSize = 0;
+  final value0 = object.created;
+  final _created = value0;
+  final value1 = object.title;
+  final _title = IsarBinaryWriter.utf8Encoder.convert(value1);
+  dynamicSize += (_title.length) as int;
+  final size = staticSize + dynamicSize;
+
+  rawObj.buffer = alloc(size);
+  rawObj.buffer_length = size;
+  final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
+  final writer = IsarBinaryWriter(buffer, staticSize);
+  writer.writeDateTime(offsets[0], _created);
+  writer.writeBytes(offsets[1], _title);
+}
+
+BoardData _boardDataDeserializeNative(IsarCollection<BoardData> collection,
+    int id, IsarBinaryReader reader, List<int> offsets) {
+  final object = BoardData();
+  object.created = reader.readDateTime(offsets[0]);
+  object.id = id;
+  object.title = reader.readString(offsets[1]);
+  return object;
+}
+
+P _boardDataDeserializePropNative<P>(
+    int id, IsarBinaryReader reader, int propertyIndex, int offset) {
+  switch (propertyIndex) {
+    case -1:
+      return id as P;
+    case 0:
+      return (reader.readDateTime(offset)) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    default:
+      throw 'Illegal propertyIndex';
+  }
+}
+
+dynamic _boardDataSerializeWeb(
+    IsarCollection<BoardData> collection, BoardData object) {
+  final jsObj = IsarNative.newJsObject();
+  IsarNative.jsObjectSet(
+      jsObj, 'created', object.created.toUtc().millisecondsSinceEpoch);
+  IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(jsObj, 'title', object.title);
+  return jsObj;
+}
+
+BoardData _boardDataDeserializeWeb(
+    IsarCollection<BoardData> collection, dynamic jsObj) {
+  final object = BoardData();
+  object.created = IsarNative.jsObjectGet(jsObj, 'created') != null
+      ? DateTime.fromMillisecondsSinceEpoch(
+              IsarNative.jsObjectGet(jsObj, 'created'),
+              isUtc: true)
+          .toLocal()
+      : DateTime.fromMillisecondsSinceEpoch(0);
+  object.id = IsarNative.jsObjectGet(jsObj, 'id');
+  object.title = IsarNative.jsObjectGet(jsObj, 'title') ?? '';
+  return object;
+}
+
+P _boardDataDeserializePropWeb<P>(Object jsObj, String propertyName) {
+  switch (propertyName) {
+    case 'created':
+      return (IsarNative.jsObjectGet(jsObj, 'created') != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+                  IsarNative.jsObjectGet(jsObj, 'created'),
+                  isUtc: true)
+              .toLocal()
+          : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+    case 'id':
+      return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
+    case 'title':
+      return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
+    default:
+      throw 'Illegal propertyName';
+  }
+}
+
+void _boardDataAttachLinks(IsarCollection col, int id, BoardData object) {}
 
 extension BoardDataQueryWhereSort
     on QueryBuilder<BoardData, BoardData, QWhere> {
   QueryBuilder<BoardData, BoardData, QAfterWhere> anyId() {
-    return addWhereClauseInternal(const WhereClause(indexName: null));
+    return addWhereClauseInternal(const IdWhereClause.any());
   }
 }
 
 extension BoardDataQueryWhere
     on QueryBuilder<BoardData, BoardData, QWhereClause> {
-  QueryBuilder<BoardData, BoardData, QAfterWhereClause> idEqualTo(int? id) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [id],
+  QueryBuilder<BoardData, BoardData, QAfterWhereClause> idEqualTo(int id) {
+    return addWhereClauseInternal(IdWhereClause.between(
+      lower: id,
       includeLower: true,
-      upper: [id],
+      upper: id,
       includeUpper: true,
     ));
   }
 
-  QueryBuilder<BoardData, BoardData, QAfterWhereClause> idNotEqualTo(int? id) {
+  QueryBuilder<BoardData, BoardData, QAfterWhereClause> idNotEqualTo(int id) {
     if (whereSortInternal == Sort.asc) {
-      return addWhereClauseInternal(WhereClause(
-        indexName: null,
-        upper: [id],
-        includeUpper: false,
-      )).addWhereClauseInternal(WhereClause(
-        indexName: null,
-        lower: [id],
-        includeLower: false,
-      ));
+      return addWhereClauseInternal(
+        IdWhereClause.lessThan(upper: id, includeUpper: false),
+      ).addWhereClauseInternal(
+        IdWhereClause.greaterThan(lower: id, includeLower: false),
+      );
     } else {
-      return addWhereClauseInternal(WhereClause(
-        indexName: null,
-        lower: [id],
-        includeLower: false,
-      )).addWhereClauseInternal(WhereClause(
-        indexName: null,
-        upper: [id],
-        includeUpper: false,
-      ));
+      return addWhereClauseInternal(
+        IdWhereClause.greaterThan(lower: id, includeLower: false),
+      ).addWhereClauseInternal(
+        IdWhereClause.lessThan(upper: id, includeUpper: false),
+      );
     }
   }
 
-  QueryBuilder<BoardData, BoardData, QAfterWhereClause> idGreaterThan(
-    int? id, {
-    bool include = false,
-  }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [id],
-      includeLower: include,
-    ));
+  QueryBuilder<BoardData, BoardData, QAfterWhereClause> idGreaterThan(int id,
+      {bool include = false}) {
+    return addWhereClauseInternal(
+      IdWhereClause.greaterThan(lower: id, includeLower: include),
+    );
   }
 
-  QueryBuilder<BoardData, BoardData, QAfterWhereClause> idLessThan(
-    int? id, {
-    bool include = false,
-  }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      upper: [id],
-      includeUpper: include,
-    ));
+  QueryBuilder<BoardData, BoardData, QAfterWhereClause> idLessThan(int id,
+      {bool include = false}) {
+    return addWhereClauseInternal(
+      IdWhereClause.lessThan(upper: id, includeUpper: include),
+    );
   }
 
   QueryBuilder<BoardData, BoardData, QAfterWhereClause> idBetween(
-    int? lowerId,
-    int? upperId, {
+    int lowerId,
+    int upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [lowerId],
+    return addWhereClauseInternal(IdWhereClause.between(
+      lower: lowerId,
       includeLower: includeLower,
-      upper: [upperId],
+      upper: upperId,
       includeUpper: includeUpper,
     ));
   }
@@ -281,7 +264,7 @@ extension BoardDataQueryFilter
   }
 
   QueryBuilder<BoardData, BoardData, QAfterFilterCondition> idEqualTo(
-      int? value) {
+      int value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
       property: 'id',
@@ -290,7 +273,7 @@ extension BoardDataQueryFilter
   }
 
   QueryBuilder<BoardData, BoardData, QAfterFilterCondition> idGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -302,7 +285,7 @@ extension BoardDataQueryFilter
   }
 
   QueryBuilder<BoardData, BoardData, QAfterFilterCondition> idLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -314,8 +297,8 @@ extension BoardDataQueryFilter
   }
 
   QueryBuilder<BoardData, BoardData, QAfterFilterCondition> idBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {

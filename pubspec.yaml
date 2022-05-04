@@ -29,8 +29,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  isar: 2.2.1
-  isar_flutter_libs: 2.2.1
+  isar: ^2.5.0
+  isar_flutter_libs: ^2.5.0
   flutter_hooks: ^0.18.0
   hooks_riverpod: ^2.0.0-dev.5
   google_fonts: ^2.3.2
@@ -42,7 +42,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  isar_generator: 2.2.1
+  isar_generator: ^2.5.0
   build_runner: any
 
   # The "flutter_lints" package below contains a set of recommended lints to
