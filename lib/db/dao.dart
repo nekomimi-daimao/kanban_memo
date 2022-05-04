@@ -1,10 +1,13 @@
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:isar/isar.dart';
+
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/model/memo/category_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Dao {
   static final Dao _instance = Dao._internal();
@@ -17,13 +20,26 @@ class Dao {
 
   late Isar _isar;
 
-  Future<void> initialize() async {
-    final dir = await getApplicationSupportDirectory();
-    _isar = await Isar.open(schemas: [
+  Future initialize() async {
+    var schemas = [
       MemoDataSchema,
       CategoryDataSchema,
       BoardDataSchema,
-    ], directory: dir.path, inspector: true);
+    ];
+
+    if (kIsWeb) {
+      _isar = await Isar.open(
+        schemas: schemas,
+        inspector: !kIsWeb,
+      );
+    } else {
+      final dir = await getApplicationSupportDirectory();
+      _isar = await Isar.open(
+        schemas: schemas,
+        inspector: !kIsWeb,
+        directory: dir.path,
+      );
+    }
   }
 
   Future<List<BoardData>> allBoard() {
@@ -69,5 +85,9 @@ class Dao {
     return _isar.writeTxn((isar) async {
       boardData.id = await isar.boardDatas.put(boardData);
     });
+  }
+
+  Future clearAll() {
+    return _isar.clear();
   }
 }

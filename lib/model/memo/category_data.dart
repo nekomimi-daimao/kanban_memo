@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:kanban_memo/model/memo/board_data.dart';
 
 part 'category_data.g.dart';
 
@@ -14,7 +15,8 @@ class CategoryData {
 
   CategoryData();
 
-  CategoryData.create(this.category) {
+  CategoryData.create(BoardData boardData, this.category) {
+    boardId = boardData.id;
     created = DateTime.now();
   }
 
