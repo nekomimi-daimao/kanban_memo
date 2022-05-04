@@ -12,6 +12,7 @@ class MemoData {
   int? boardId;
   int? categoryId;
 
+  int index = 0;
   String title = "";
   String memo = "";
 

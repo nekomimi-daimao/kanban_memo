@@ -9,4 +9,10 @@ class BoardData {
 
   String title = "";
   late DateTime created;
+
+  BoardData();
+
+  BoardData.create(this.title) {
+    created = DateTime.now();
+  }
 }
