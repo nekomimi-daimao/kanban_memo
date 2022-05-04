@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kanban_memo/model/board_data.dart';
+import 'package:kanban_memo/model/memo/board_data.dart';
 
 class BoardNotifier extends StateNotifier<BoardData> {
   BoardNotifier(BoardData state) : super(state);

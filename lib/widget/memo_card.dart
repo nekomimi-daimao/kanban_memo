@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kanban_memo/model/memo_data.dart';
+import 'package:kanban_memo/model/memo/memo_data.dart';
 
 class MemoCard extends StatefulWidget {
   final MemoData data;

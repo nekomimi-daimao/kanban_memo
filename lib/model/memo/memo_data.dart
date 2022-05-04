@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
-import 'package:kanban_memo/model/board_data.dart';
-import 'package:kanban_memo/model/category_data.dart';
+import 'package:kanban_memo/model/memo/board_data.dart';
+import 'package:kanban_memo/model/memo/category_data.dart';
 
 part 'memo_data.g.dart';
 

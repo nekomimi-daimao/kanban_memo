@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kanban_memo/model/memo_data.dart';
+import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/widget/memo_card.dart';
 
 void main() {
