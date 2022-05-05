@@ -27,8 +27,7 @@ class CategoryListState extends State<CategoryList> {
         width: 200,
         child: ListView(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          primary: false,
           children: memoData.map((e) => MemoCard(data: e)).toList(),
         ));
   }
