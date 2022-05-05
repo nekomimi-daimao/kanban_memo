@@ -10,6 +10,9 @@ import 'package:kanban_memo/widget/testbed.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Dao().initialize();
+  // Testbed().init();
+  // Testbed().clear();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -47,15 +50,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Testbed().init();
-    // Testbed().clear();
-
     AsyncValue<List<BoardData>> boards = ref.watch(boardProvider);
 
     List<Widget> view = boards.when(
       loading: () => [const Text("Loading")],
       error: (err, stack) => [Text('Error: $err')],
       data: (boards) {
+        if (boards.isEmpty) {
+          return [const Text("Empty")];
+        }
         return boards.map((e) => ListTile(title: Text(e.title))).toList();
       },
     );

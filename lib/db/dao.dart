@@ -75,6 +75,12 @@ class Dao {
     });
   }
 
+  Future putAllMemo(List<MemoData> memoData) {
+    return _isar.writeTxn((isar) async {
+      await _isar.memoDatas.putAll(memoData);
+    });
+  }
+
   Future putCategory(CategoryData categoryData) {
     return _isar.writeTxn((isar) async {
       categoryData.id = await isar.categoryDatas.put(categoryData);
