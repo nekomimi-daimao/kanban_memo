@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
-import 'package:kanban_memo/widget/memo_card.dart';
+import 'package:kanban_memo/widget/kanban_board.dart';
 import 'package:kanban_memo/widget/testbed.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Dao().initialize();
-  // Testbed().init();
-  // Testbed().clear();
+  await Testbed().init();
+  // await Testbed().clear();
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -44,41 +46,45 @@ class MyHomePage extends StatefulHookConsumerWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-  final boardProvider = FutureProvider<List<BoardData>>((ref) async {
+  final boardListProvider = FutureProvider<List<BoardData>>((ref) async {
     return Dao().allBoard();
   });
 
+  final boardSelectedProvider =
+      StateProvider<BoardData>((ref) => BoardData.empty());
+
   @override
   Widget build(BuildContext context) {
-    AsyncValue<List<BoardData>> boards = ref.watch(boardProvider);
+    AsyncValue<List<BoardData>> boards = ref.watch(boardListProvider);
 
-    List<Widget> view = boards.when(
-      loading: () => [const Text("Loading")],
-      error: (err, stack) => [Text('Error: $err')],
-      data: (boards) {
-        if (boards.isEmpty) {
-          return [const Text("Empty")];
-        }
-        return boards.map((e) => ListTile(title: Text(e.title))).toList();
-      },
-    );
+    return boards.when(
+        loading: () => const CircularProgressIndicator(),
+        error: (err, stack) => Text('Error: $err'),
+        data: (boards) {
+          List<Widget> cards = [];
+          if (boards.isEmpty) {
+            cards.add(const Text("Empty"));
+          } else {
+            for (var v in boards) {
+              cards.add(ListTile(
+                title: Text(v.title),
+                onTap: () {
+                  ref.read(boardSelectedProvider.notifier).state = v;
+                },
+              ));
+            }
+          }
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MemoCard(data: widget.data),
-            ],
-          ),
-        ),
-        drawer: Drawer(
-          child: ListView(
-            children: view,
-          ),
-        ));
+          return Scaffold(
+              appBar: AppBar(
+                title: Text(widget.title),
+              ),
+              body: KanbanBoard(ref.watch(boardSelectedProvider)),
+              drawer: Drawer(
+                child: ListView(
+                  children: cards,
+                ),
+              ));
+        });
   }
 }

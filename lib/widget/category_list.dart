@@ -25,19 +25,11 @@ class CategoryListState extends State<CategoryList> {
 
     return SizedBox(
         width: 200,
-        child: ReorderableListView(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            children: memoData.map((e) => MemoCard(data: e)).toList(),
-            onReorder: (int oldIndex, int newIndex) {
-              if (oldIndex < newIndex) {
-                newIndex -= 1;
-              }
-              setState(() {
-                var c = widget.memoData.removeAt(oldIndex);
-                widget.memoData.insert(newIndex, c);
-              });
-            }));
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: memoData.map((e) => MemoCard(data: e)).toList(),
+        ));
   }
 }

@@ -18,6 +18,9 @@ class KanbanBoard extends HookConsumerWidget {
   final boardMapProvider = FutureProvider.autoDispose
       .family<LinkedHashMap<CategoryData, List<MemoData>>, BoardData>(
           (ref, data) async {
+    if (data.isEmpty()) {
+      return LinkedHashMap<CategoryData, List<MemoData>>();
+    }
     return Dao().boardMap(data);
   });
 
@@ -45,13 +48,5 @@ class KanbanBoard extends HookConsumerWidget {
             ),
           );
         });
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [],
-      ),
-    );
   }
 }

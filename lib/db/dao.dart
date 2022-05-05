@@ -1,6 +1,9 @@
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
+
 import 'package:flutter/foundation.dart';
+
 import 'package:path_provider/path_provider.dart';
 
 import 'package:isar/isar.dart';
@@ -77,7 +80,7 @@ class Dao {
 
   Future putAllMemo(List<MemoData> memoData) {
     return _isar.writeTxn((isar) async {
-      await _isar.memoDatas.putAll(memoData);
+      await isar.memoDatas.putAll(memoData);
     });
   }
 
@@ -94,6 +97,20 @@ class Dao {
   }
 
   Future clearAll() {
-    return _isar.clear();
+    return _isar.writeTxn((isar) async {
+      var allBoard = await isar.boardDatas.where().findAll();
+      var deleteBoard = isar.boardDatas
+          .deleteAll(allBoard.map((e) => e.id).whereNotNull().toList());
+
+      var allCategory = await isar.categoryDatas.where().findAll();
+      var deleteCategory = isar.categoryDatas
+          .deleteAll(allCategory.map((e) => e.id).whereNotNull().toList());
+
+      var allMemo = await isar.memoDatas.where().findAll();
+      var deleteMemo = isar.memoDatas
+          .deleteAll(allMemo.map((e) => e.id).whereNotNull().toList());
+
+      await Future.wait([deleteBoard, deleteCategory, deleteMemo]);
+    });
   }
 }

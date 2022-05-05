@@ -16,6 +16,18 @@ class BoardData {
     created = DateTime.now();
   }
 
+  BoardData.empty() {
+    id = -1;
+    created = DateTime.fromMillisecondsSinceEpoch(0);
+  }
+
+  bool isEmpty() => id == -1;
+
+  @override
+  String toString() {
+    return 'BoardData{id: $id, title: $title, created: $created}';
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
