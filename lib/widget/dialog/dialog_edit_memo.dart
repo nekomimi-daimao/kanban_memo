@@ -9,39 +9,46 @@ class EditMemoDialog extends HookConsumerWidget {
 
   final MemoData memoData;
 
+  // workaround 4 double.infinity
+  static const double dummyWidth = 1000000;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var titleController = TextEditingController(text: memoData.title);
+    var memoController = TextEditingController(text: memoData.memo);
     return AlertDialog(
-      content: Column(
-        children: [
-          TextField(
-            controller: TextEditingController(text: memoData.title),
-            maxLines: 1,
-            onChanged: (v) {
-              memoData.title = v;
-            },
-          ),
-          TextField(
-            controller: TextEditingController(text: memoData.memo),
-            maxLines: null,
-            onChanged: (v) {
-              memoData.memo = v;
-            },
-          ),
-        ],
+      insetPadding: const EdgeInsets.all(80),
+      content: Container(
+        width: dummyWidth,
+        child: Column(
+          children: [
+            TextField(
+              controller: titleController,
+              maxLines: 1,
+            ),
+            TextField(
+              controller: memoController,
+              maxLines: null,
+              minLines: 6,
+              keyboardType: TextInputType.multiline,
+            ),
+          ],
+        ),
       ),
       actions: [
-        TextButton(
+        OutlinedButton(
           onPressed: () {
             Navigator.of(context).pop(false);
           },
-          child: const Text("cancel"),
+          child: const Text("Cancel"),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () {
+            memoData.title = titleController.text;
+            memoData.memo = titleController.text;
             Navigator.of(context).pop(true);
           },
-          child: const Text("save"),
+          child: const Text("Save"),
         ),
       ],
     );
