@@ -7,6 +7,9 @@ class MemoCard extends StatefulWidget {
   const MemoCard({Key? key, required this.data}) : super(key: key);
 
   @override
+  Key? get key => Key(data.id.toString());
+
+  @override
   State<StatefulWidget> createState() {
     return _MemoCardState();
   }

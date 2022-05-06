@@ -38,10 +38,21 @@ class CategoryListState extends State<CategoryList> {
             },
           ),
           Flexible(
-            child: ListView(
+            child: ReorderableListView(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               primary: false,
+              // buildDefaultDragHandles: false,
               children: memoData.map((e) => MemoCard(data: e)).toList(),
+              onReorder: (oldIndex, newIndex) {
+                if (oldIndex < newIndex) {
+                  // removing the item at oldIndex will shorten the list by 1.
+                  newIndex -= 1;
+                }
+                var c = widget.memoData.removeAt(oldIndex);
+                setState(() {
+                  widget.memoData.insert(newIndex, c);
+                });
+              },
             ),
           )
         ],
