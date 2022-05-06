@@ -76,18 +76,14 @@ class _MemoCardState extends State<MemoCard> {
               controller: titleController,
               maxLines: 1,
               onChanged: (v) {
-                setState(() {
-                  widget.data.title = v;
-                });
+                widget.data.title = v;
               },
             ),
             TextField(
               controller: memoController,
               maxLines: null,
               onChanged: (v) {
-                setState(() {
-                  widget.data.memo = v;
-                });
+                widget.data.memo = v;
               },
             ),
           ],
