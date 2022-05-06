@@ -25,28 +25,70 @@ class _MemoCardState extends State<MemoCard> {
 
   @override
   Widget build(BuildContext context) {
+    return Draggable(
+      data: widget.data,
+      child: buildCard(),
+      feedback: Container(
+        padding: const EdgeInsets.all(30),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Theme.of(context).backgroundColor,
+            border: Border.all(
+              color: Theme.of(context).focusColor,
+              width: 10,
+            )),
+        child: Icon(
+          Icons.article,
+          color: Theme.of(context).focusColor,
+          size: 24.0,
+        ),
+      ),
+      childWhenDragging: Container(
+        padding: const EdgeInsets.all(20),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: Theme.of(context).primaryColor,
+            )),
+        child: Icon(
+          Icons.article,
+          color: Theme.of(context).primaryColor,
+          size: 24.0,
+        ),
+      ),
+    );
+  }
+
+  Card buildCard() {
     return Card(
-      child: Column(
-        children: [
-          TextField(
-            controller: titleController,
-            maxLines: 1,
-            onChanged: (v) {
-              setState(() {
-                widget.data.title = v;
-              });
-            },
-          ),
-          TextField(
-            controller: memoController,
-            maxLines: null,
-            onChanged: (v) {
-              setState(() {
-                widget.data.memo = v;
-              });
-            },
-          ),
-        ],
+      color: Theme.of(context).cardColor,
+      // elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              controller: titleController,
+              maxLines: 1,
+              onChanged: (v) {
+                setState(() {
+                  widget.data.title = v;
+                });
+              },
+            ),
+            TextField(
+              controller: memoController,
+              maxLines: null,
+              onChanged: (v) {
+                setState(() {
+                  widget.data.memo = v;
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:kanban_memo/model/memo/category_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/widget/memo_card.dart';
@@ -24,11 +25,27 @@ class CategoryListState extends State<CategoryList> {
     memoData.sort((a, b) => a.index.compareTo(b.index));
 
     return SizedBox(
-        width: 200,
-        child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          primary: false,
-          children: memoData.map((e) => MemoCard(data: e)).toList(),
-        ));
+      width: 200,
+      child: Column(
+        children: [
+          TextField(
+            controller:
+                TextEditingController(text: widget.categoryData.category),
+            onChanged: (v) {
+              setState(() {
+                widget.categoryData.category = v;
+              });
+            },
+          ),
+          Flexible(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              primary: false,
+              children: memoData.map((e) => MemoCard(data: e)).toList(),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

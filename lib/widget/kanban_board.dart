@@ -38,11 +38,12 @@ class KanbanBoard extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: map
                   .map((key, value) => MapEntry(
-                      key,
-                      CategoryList(
-                        categoryData: key,
-                        memoData: value,
-                      )))
+                        key,
+                        CategoryList(
+                          categoryData: key,
+                          memoData: value,
+                        ),
+                      ))
                   .values
                   .toList(),
             ),
