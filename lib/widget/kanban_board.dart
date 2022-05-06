@@ -40,6 +40,7 @@ class KanbanBoard extends HookConsumerWidget {
                   .map((key, value) => MapEntry(
                         key,
                         CategoryList(
+                          boardData: boardData,
                           categoryData: key,
                           memoData: value,
                         ),

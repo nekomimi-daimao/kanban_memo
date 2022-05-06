@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kanban_memo/db/dao.dart';
+import 'package:kanban_memo/model/memo/board_data.dart';
 
 import 'package:kanban_memo/model/memo/category_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
@@ -6,9 +8,13 @@ import 'package:kanban_memo/widget/memo_card.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList(
-      {Key? key, required this.categoryData, required this.memoData})
+      {Key? key,
+      required this.boardData,
+      required this.categoryData,
+      required this.memoData})
       : super(key: key);
 
+  final BoardData boardData;
   final CategoryData categoryData;
   final List<MemoData> memoData;
 
@@ -23,6 +29,25 @@ class CategoryListState extends State<CategoryList> {
   Widget build(BuildContext context) {
     var memoData = widget.memoData;
     memoData.sort((a, b) => a.index.compareTo(b.index));
+    var addTile = ListTile(
+      key: const Key("add"),
+      leading: const Icon(Icons.add_box_rounded),
+      title: const Text("add"),
+      onTap: () async {
+        var newMemo = MemoData.create(widget.boardData, widget.categoryData);
+        var lastIndex =
+            widget.memoData.isNotEmpty ? widget.memoData.last.index : 0;
+        newMemo.index = lastIndex + 1;
+        await Dao().putMemo(newMemo);
+        setState(() {
+          widget.memoData.add(newMemo);
+        });
+      },
+    );
+
+    List<Widget> items = [];
+    items.addAll(memoData.map((e) => MemoCard(data: e)).toList());
+    items.add(addTile);
 
     return SizedBox(
       width: 200,
@@ -42,15 +67,21 @@ class CategoryListState extends State<CategoryList> {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               primary: false,
               // buildDefaultDragHandles: false,
-              children: memoData.map((e) => MemoCard(data: e)).toList(),
+              children: items,
               onReorder: (oldIndex, newIndex) {
+                if (items[oldIndex].key == addTile.key ||
+                    newIndex == items.length) {
+                  return;
+                }
                 if (oldIndex < newIndex) {
-                  // removing the item at oldIndex will shorten the list by 1.
                   newIndex -= 1;
                 }
                 var c = widget.memoData.removeAt(oldIndex);
+                widget.memoData.insert(newIndex, c);
                 setState(() {
-                  widget.memoData.insert(newIndex, c);
+                  widget.memoData.asMap().forEach((key, value) {
+                    value.index = key;
+                  });
                 });
               },
             ),
