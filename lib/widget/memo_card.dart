@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
+import 'package:kanban_memo/widget/dialog/dialog_edit_memo.dart';
 
 class MemoCard extends StatefulWidget {
   final MemoData data;
@@ -77,6 +78,14 @@ class _MemoCardState extends State<MemoCard> {
               maxLines: 1,
               onChanged: (v) {
                 widget.data.title = v;
+                showDialog<bool>(
+                  context: context,
+                  builder: (context) {
+                    return EditMemoDialog(
+                      memoData: widget.data,
+                    );
+                  },
+                );
               },
             ),
             TextField(
