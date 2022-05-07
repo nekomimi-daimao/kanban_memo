@@ -7,6 +7,7 @@ import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/widget/kanban_board.dart';
+import 'package:kanban_memo/widget/main_page.dart';
 import 'package:kanban_memo/widget/testbed.dart';
 
 void main() async {
@@ -23,6 +24,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return MainPage();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -37,7 +40,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulHookConsumerWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
-  final MemoData data = MemoData(boardId: 0, categoryId: 0);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -66,18 +68,25 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             cards.add(const Text("Empty"));
           } else {
             for (var v in boards) {
-              cards.add(ListTile(
-                title: Text(v.title),
-                onTap: () {
-                  ref.read(boardSelectedProvider.notifier).state = v;
-                },
-              ));
+              cards.add(
+                ListTile(
+                  title: Text(v.title),
+                  onTap: () {
+                    ref.read(boardSelectedProvider.notifier).state = v;
+                  },
+                ),
+              );
             }
           }
 
           return Scaffold(
               appBar: AppBar(
                 title: Text(widget.title),
+                centerTitle: true,
+                actions: const [
+                  Icon(Icons.add),
+                  Icon(Icons.done),
+                ],
               ),
               body: KanbanBoard(ref.watch(boardSelectedProvider)),
               drawer: Drawer(

@@ -15,7 +15,7 @@ class EditMemoDialog extends HookConsumerWidget {
   InputDecoration _decoration(String label) {
     return InputDecoration(
       labelText: label,
-      border: OutlineInputBorder(),
+      border: const OutlineInputBorder(),
     );
   }
 
