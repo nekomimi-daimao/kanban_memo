@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
 
 class EditMemoDialog extends HookConsumerWidget {
-  const EditMemoDialog({Key? key, required this.memoData}) : super(key: key);
+  EditMemoDialog({Key? key, required this.memoData}) : super(key: key);
 
   final MemoData memoData;
 
@@ -19,10 +19,23 @@ class EditMemoDialog extends HookConsumerWidget {
     );
   }
 
+  final titleEditingProvider =
+      AutoDisposeStateProviderFamily<TextEditingController, String>(
+          (ref, initial) {
+    return TextEditingController(text: initial);
+  });
+  final memoEditingProvider =
+      AutoDisposeStateProviderFamily<TextEditingController, String>(
+          (ref, initial) {
+    return TextEditingController(text: initial);
+  });
+
+  final allowDeleteProvider = AutoDisposeStateProvider<bool>((ref) => false);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var titleController = TextEditingController(text: memoData.title);
-    var memoController = TextEditingController(text: memoData.memo);
+    var titleController = ref.watch(titleEditingProvider(memoData.title));
+    var memoController = ref.watch(memoEditingProvider(memoData.memo));
     return AlertDialog(
       insetPadding: const EdgeInsets.all(80),
       content: Container(
@@ -50,6 +63,14 @@ class EditMemoDialog extends HookConsumerWidget {
         ),
       ),
       actions: [
+        Checkbox(
+            value: ref.watch(allowDeleteProvider),
+            onChanged: (checked) {
+              if (checked == null) {
+                return;
+              }
+              ref.read(allowDeleteProvider.notifier).state = checked;
+            }),
         OutlinedButton(
           onPressed: () {
             Navigator.of(context).pop(false);
