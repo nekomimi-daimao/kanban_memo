@@ -64,7 +64,9 @@ class MainPage extends HookConsumerWidget {
       key: const Key("add"),
       title: const Icon(Icons.add_box_rounded),
       onTap: () async {
-        var boardName = await _addBoardDialog(context);
+        var builder = EditTextDialog.builder("Add Board");
+        builder.submit = "Create";
+        var boardName = await builder.build().show(context);
         if (boardName == null || boardName.isEmpty) {
           return;
         }
@@ -75,16 +77,5 @@ class MainPage extends HookConsumerWidget {
     drawerItem.add(addTile);
 
     return drawerItem;
-  }
-
-  Future<String?> _addBoardDialog(BuildContext context) async {
-    var builder = EditTextDialog.builder("Add Board");
-    builder.submit = "Create";
-
-    return showDialog<String>(
-        context: context,
-        builder: (_) {
-          return builder.build();
-        });
   }
 }

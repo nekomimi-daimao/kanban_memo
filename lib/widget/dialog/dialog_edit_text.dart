@@ -28,6 +28,14 @@ class EditTextDialog extends HookConsumerWidget {
     return EditTextDialogBuilder(title);
   }
 
+  Future<String?> show(BuildContext context) {
+    return showDialog<String>(
+        context: context,
+        builder: (_) {
+          return this;
+        });
+  }
+
   final TextEditingController _textEditingController = TextEditingController();
 
   @override
