@@ -31,8 +31,7 @@ class CategoryListState extends State<CategoryList> {
     memoData.sort((a, b) => a.index.compareTo(b.index));
     var addTile = ListTile(
       key: const Key("add"),
-      leading: const Icon(Icons.add_box_rounded),
-      title: const Text("add"),
+      title: const Icon(Icons.add_box_rounded),
       onTap: () async {
         var newMemo = MemoData.create(widget.boardData, widget.categoryData);
         var lastIndex =
@@ -56,17 +55,16 @@ class CategoryListState extends State<CategoryList> {
           TextField(
             controller:
                 TextEditingController(text: widget.categoryData.category),
+            textAlign: TextAlign.center,
             onChanged: (v) {
-              setState(() {
-                widget.categoryData.category = v;
-              });
+              widget.categoryData.category = v;
             },
           ),
           Flexible(
             child: ReorderableListView(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               primary: false,
-              // buildDefaultDragHandles: false,
+              buildDefaultDragHandles: false,
               children: items,
               onReorder: (oldIndex, newIndex) {
                 if (items[oldIndex].key == addTile.key ||

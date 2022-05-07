@@ -12,6 +12,13 @@ class EditMemoDialog extends HookConsumerWidget {
   // workaround 4 double.infinity
   static const double dummyWidth = 1000000;
 
+  InputDecoration _decoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      border: OutlineInputBorder(),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var titleController = TextEditingController(text: memoData.title);
@@ -25,12 +32,19 @@ class EditMemoDialog extends HookConsumerWidget {
             TextField(
               controller: titleController,
               maxLines: 1,
+              decoration: _decoration("Title"),
             ),
-            TextField(
-              controller: memoController,
-              maxLines: null,
-              minLines: 6,
-              keyboardType: TextInputType.multiline,
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: TextField(
+                controller: memoController,
+                maxLines: null,
+                minLines: 10,
+                decoration: _decoration("Memo"),
+                keyboardType: TextInputType.multiline,
+              ),
             ),
           ],
         ),
