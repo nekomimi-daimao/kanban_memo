@@ -98,7 +98,7 @@ class EditMemoDialog extends HookConsumerWidget {
         ElevatedButton(
           onPressed: () {
             memoData.title = titleController.text;
-            memoData.memo = titleController.text;
+            memoData.memo = memoController.text;
             Navigator.of(context).pop(true);
           },
           child: const Text("Save"),

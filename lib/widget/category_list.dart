@@ -37,10 +37,8 @@ class CategoryListState extends State<CategoryList> {
         var lastIndex =
             widget.memoData.isNotEmpty ? widget.memoData.last.index : 0;
         newMemo.index = lastIndex + 1;
+        widget.memoData.add(newMemo);
         await Dao().putMemo(newMemo);
-        setState(() {
-          widget.memoData.add(newMemo);
-        });
       },
     );
 
@@ -76,11 +74,10 @@ class CategoryListState extends State<CategoryList> {
                 }
                 var c = widget.memoData.removeAt(oldIndex);
                 widget.memoData.insert(newIndex, c);
-                setState(() {
-                  widget.memoData.asMap().forEach((key, value) {
-                    value.index = key;
-                  });
+                widget.memoData.asMap().forEach((key, value) {
+                  value.index = key;
                 });
+                Dao().putAllMemo(widget.memoData);
               },
             ),
           )
