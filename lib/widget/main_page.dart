@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/provider/board_providers.dart';
+import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
 import 'package:kanban_memo/widget/kanban_board.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
 
@@ -22,7 +23,18 @@ class MainPage extends HookConsumerWidget {
         var drawerItem = _createDrawerItem(ref, context, boards);
         return Scaffold(
           appBar: AppBar(
-            title: Text(ref.watch(BoardProviders.boardSelectedProvider).title),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(ref.watch(BoardProviders.boardSelectedProvider).title),
+                IconButton(
+                  icon: const Icon(Icons.edit_rounded),
+                  onPressed: () async {
+                    _editBoard(context, ref.read(BoardProviders.boardSelectedProvider));
+                  },
+                ),
+              ],
+            ),
             centerTitle: true,
             actions: const [
               Icon(Icons.settings_applications_rounded),
@@ -77,5 +89,26 @@ class MainPage extends HookConsumerWidget {
     drawerItem.add(addTile);
 
     return drawerItem;
+  }
+
+  Future _editBoard(BuildContext context, BoardData boardData) async {
+    var builder = EditDataDialog.builder("Edit Category");
+    builder.initialValue = boardData.title;
+    var edit = await builder.build().show(context);
+    if (edit == null) {
+      return;
+    }
+    switch (edit.resultType) {
+      case EditDataResultType.cancel:
+        // Nothing
+        break;
+      case EditDataResultType.submit:
+        boardData.title = edit.input ?? "";
+        Dao().putBoard(boardData);
+        break;
+      case EditDataResultType.delete:
+        // TODO delete
+        break;
+    }
   }
 }

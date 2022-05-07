@@ -4,7 +4,7 @@ import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/model/memo/category_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
-import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
+import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
 import 'package:kanban_memo/widget/memo_card.dart';
 
 class CategoryList extends StatefulWidget {
@@ -26,17 +26,6 @@ class CategoryList extends StatefulWidget {
 }
 
 class CategoryListState extends State<CategoryList> {
-  Future renameCategory(BuildContext context) async {
-    var builder = EditTextDialog.builder("Rename Category");
-    builder.initialValue = widget.categoryData.category;
-    var renamed = await builder.build().show(context);
-    if (renamed == null || renamed.isEmpty) {
-      return;
-    }
-    widget.categoryData.category = renamed;
-    Dao().putCategory(widget.categoryData);
-  }
-
   @override
   Widget build(BuildContext context) {
     var memoData = widget.memoData;
@@ -71,7 +60,7 @@ class CategoryListState extends State<CategoryList> {
               textAlign: TextAlign.center,
             ),
             onPressed: () {
-              renameCategory(context);
+              _editCategory(context);
             },
           ),
           const SizedBox(
@@ -103,5 +92,26 @@ class CategoryListState extends State<CategoryList> {
         ],
       ),
     );
+  }
+
+  Future _editCategory(BuildContext context) async {
+    var builder = EditDataDialog.builder("Edit Category");
+    builder.initialValue = widget.categoryData.category;
+    var edit = await builder.build().show(context);
+    if (edit == null) {
+      return;
+    }
+    switch (edit.resultType) {
+      case EditDataResultType.cancel:
+        // Nothing
+        break;
+      case EditDataResultType.submit:
+        widget.categoryData.category = edit.input ?? "";
+        Dao().putCategory(widget.categoryData);
+        break;
+      case EditDataResultType.delete:
+        // TODO delete
+        break;
+    }
   }
 }
