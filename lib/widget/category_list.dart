@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
-
 import 'package:kanban_memo/model/memo/category_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
+import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
 import 'package:kanban_memo/widget/memo_card.dart';
 
 class CategoryList extends StatefulWidget {
@@ -25,6 +26,17 @@ class CategoryList extends StatefulWidget {
 }
 
 class CategoryListState extends State<CategoryList> {
+  Future renameCategory(BuildContext context) async {
+    var builder = EditTextDialog.builder("Rename Category");
+    builder.initialValue = widget.categoryData.category;
+    var renamed = await builder.build().show(context);
+    if (renamed == null || renamed.isEmpty) {
+      return;
+    }
+    widget.categoryData.category = renamed;
+    Dao().putCategory(widget.categoryData);
+  }
+
   @override
   Widget build(BuildContext context) {
     var memoData = widget.memoData;
@@ -43,20 +55,27 @@ class CategoryListState extends State<CategoryList> {
     );
 
     List<Widget> items = [];
-    items.addAll(memoData.map((e) => MemoCard(data: e)).toList());
+    items.addAll(memoData.map((e) => MemoCard(data: e)));
     items.add(addTile);
 
     return SizedBox(
       width: 200,
       child: Column(
         children: [
-          TextField(
-            controller:
-                TextEditingController(text: widget.categoryData.category),
-            textAlign: TextAlign.center,
-            onChanged: (v) {
-              widget.categoryData.category = v;
+          const SizedBox(
+            height: 20,
+          ),
+          OutlinedButton(
+            child: Text(
+              widget.categoryData.category,
+              textAlign: TextAlign.center,
+            ),
+            onPressed: () {
+              renameCategory(context);
             },
+          ),
+          const SizedBox(
+            height: 12,
           ),
           Flexible(
             child: ReorderableListView(

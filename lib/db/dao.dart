@@ -45,6 +45,18 @@ class Dao {
     }
   }
 
+  Stream<void> boardStream() {
+    return _isar.boardDatas.watchLazy();
+  }
+
+  Stream<void> categoryStream() {
+    return _isar.categoryDatas.watchLazy();
+  }
+
+  Stream<void> memoStream() {
+    return _isar.memoDatas.watchLazy();
+  }
+
   Future<List<BoardData>> allBoard() {
     return _isar.boardDatas.where().sortByCreated().findAll();
   }
@@ -53,6 +65,7 @@ class Dao {
       BoardData data) async {
     var categories = await boardCategory(data);
     var memos = await boardMemo(data);
+    // ignore: prefer_collection_literals
     var map = LinkedHashMap<CategoryData, List<MemoData>>();
     for (var c in categories) {
       map[c] = memos.where((m) => m.categoryId == c.id).toList();

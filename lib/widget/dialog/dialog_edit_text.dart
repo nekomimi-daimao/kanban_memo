@@ -6,6 +6,7 @@ class EditTextDialogBuilder {
   String title;
   String submit = "Submit";
   String cancel = "Cancel";
+  String initialValue = "";
 
   EditTextDialogBuilder(this.title);
 
@@ -18,11 +19,16 @@ class EditTextDialog extends HookConsumerWidget {
   final String title;
   final String cancel;
   final String submit;
+  final String initialValue;
+  final TextEditingController _textEditingController;
 
   EditTextDialog._builder(EditTextDialogBuilder builder)
       : title = builder.title,
         submit = builder.submit,
-        cancel = builder.cancel;
+        cancel = builder.cancel,
+        initialValue = builder.initialValue,
+        _textEditingController =
+            TextEditingController(text: builder.initialValue);
 
   static EditTextDialogBuilder builder(String title) {
     return EditTextDialogBuilder(title);
@@ -35,8 +41,6 @@ class EditTextDialog extends HookConsumerWidget {
           return this;
         });
   }
-
-  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -61,16 +61,11 @@ class KanbanBoard extends HookConsumerWidget {
     );
 
     List<Widget> list = [];
-    list.addAll(map
-        .map((key, value) => MapEntry(
-              key,
-              CategoryList(
-                boardData: boardData,
-                categoryData: key,
-                memoData: value,
-              ),
-            ))
-        .values);
+    map.forEach((key, value) {
+      var categoryList = CategoryList(
+          boardData: boardData, categoryData: key, memoData: value);
+      list.add(categoryList);
+    });
     list.add(addIcon);
     return list;
   }
