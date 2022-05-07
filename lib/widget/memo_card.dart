@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_memo.dart';
+import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 
 class MemoCard extends StatefulWidget {
   final MemoData data;
@@ -35,8 +37,8 @@ class _MemoCardState extends State<MemoCard> {
     return Card(
       color: Theme.of(context).cardColor,
       child: InkWell(
-        onTap: () async {
-          await showMemoDialog();
+        onTap: () {
+          _editMemo(widget.data);
         },
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -57,18 +59,21 @@ class _MemoCardState extends State<MemoCard> {
     );
   }
 
-  Future<void> showMemoDialog() async {
-    var requireSave = await showDialog<bool>(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return EditMemoDialog(
-          memoData: widget.data,
-        );
-      },
-    );
-    if (requireSave != null && requireSave) {
-      Dao().putMemo(widget.data);
+  Future _editMemo(MemoData memoData) async {
+    var editResult = await EditMemoDialog.show(context, memoData);
+    if (editResult == null) {
+      return;
+    }
+    switch (editResult) {
+      case EditResultType.cancel:
+        // Nothing
+        break;
+      case EditResultType.submit:
+        Dao().putMemo(memoData);
+        break;
+      case EditResultType.delete:
+        Dao().deleteMemo(memoData);
+        break;
     }
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
+
 class EditDataDialogBuilder {
   String title;
   String submit = "Submit";
@@ -17,16 +19,10 @@ class EditDataDialogBuilder {
 
 @immutable
 class EditDataResult {
-  final EditDataResultType resultType;
+  final EditResultType resultType;
   final String? input;
 
   const EditDataResult(this.resultType, this.input);
-}
-
-enum EditDataResultType {
-  cancel,
-  submit,
-  delete,
 }
 
 class EditDataDialog extends HookConsumerWidget {
@@ -76,7 +72,7 @@ class EditDataDialog extends HookConsumerWidget {
             ? null
             : () {
                 Navigator.of(context)
-                    .pop(const EditDataResult(EditDataResultType.delete, null));
+                    .pop(const EditDataResult(EditResultType.delete, null));
               },
         child: const Text(
           "Delete",
@@ -92,14 +88,14 @@ class EditDataDialog extends HookConsumerWidget {
       OutlinedButton(
         onPressed: () {
           Navigator.of(context)
-              .pop(const EditDataResult(EditDataResultType.cancel, null));
+              .pop(const EditDataResult(EditResultType.cancel, null));
         },
         child: Text(cancel),
       ),
       ElevatedButton(
         onPressed: () {
           Navigator.of(context).pop(EditDataResult(
-              EditDataResultType.submit, _textEditingController.text));
+              EditResultType.submit, _textEditingController.text));
         },
         child: Text(submit),
       ),

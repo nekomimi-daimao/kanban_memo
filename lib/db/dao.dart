@@ -109,6 +109,50 @@ class Dao {
     });
   }
 
+  Future deleteMemo(MemoData memoData) {
+    var id = memoData.id;
+    if (id == null) {
+      return Future.value();
+    }
+    return _isar.writeTxn((isar) async {
+      _isar.memoDatas.delete(id);
+    });
+  }
+
+  Future deleteCategory(CategoryData categoryData) async {
+    var id = categoryData.id;
+    if (id == null) {
+      return Future.value();
+    }
+    return _isar.writeTxn((isar) async {
+      var deleteMemo =
+          _isar.memoDatas.filter().categoryIdEqualTo(id).deleteAll();
+      var deleteCategory = _isar.categoryDatas.delete(id);
+      await Future.wait([
+        deleteMemo,
+        deleteCategory,
+      ]);
+    });
+  }
+
+  Future deleteBoard(BoardData boardData) async {
+    var id = boardData.id;
+    if (id == null) {
+      return Future.value();
+    }
+    return _isar.writeTxn((isar) async {
+      var deleteMemo = _isar.memoDatas.filter().boardIdEqualTo(id).deleteAll();
+      var deleteCategory =
+          _isar.categoryDatas.filter().boardIdEqualTo(id).deleteAll();
+      var deleteBoard = _isar.boardDatas.delete(id);
+      await Future.wait([
+        deleteMemo,
+        deleteCategory,
+        deleteBoard,
+      ]);
+    });
+  }
+
   Future clearAll() {
     return _isar.writeTxn((isar) async {
       var allBoard = await isar.boardDatas.where().findAll();

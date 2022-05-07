@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kanban_memo/model/memo/memo_data.dart';
+import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 
 class EditMemoDialog extends HookConsumerWidget {
   EditMemoDialog({Key? key, required this.memoData}) : super(key: key);
@@ -12,11 +13,13 @@ class EditMemoDialog extends HookConsumerWidget {
   // workaround 4 double.infinity
   static const double dummyWidth = 1000000;
 
-  InputDecoration _decoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      border: const OutlineInputBorder(),
-    );
+  static Future<EditResultType?> show(BuildContext context, MemoData memoData) {
+    return showDialog<EditResultType>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return EditMemoDialog(memoData: memoData);
+        });
   }
 
   final titleEditingProvider =
@@ -75,8 +78,7 @@ class EditMemoDialog extends HookConsumerWidget {
           onPressed: !ref.watch(allowDeleteProvider)
               ? null
               : () {
-                  // TODO delete
-                  Navigator.of(context).pop(true);
+                  Navigator.of(context).pop(EditResultType.delete);
                 },
           child: const Text(
             "Delete",
@@ -91,7 +93,7 @@ class EditMemoDialog extends HookConsumerWidget {
         ),
         OutlinedButton(
           onPressed: () {
-            Navigator.of(context).pop(false);
+            Navigator.of(context).pop(EditResultType.cancel);
           },
           child: const Text("Cancel"),
         ),
@@ -99,11 +101,18 @@ class EditMemoDialog extends HookConsumerWidget {
           onPressed: () {
             memoData.title = titleController.text;
             memoData.memo = memoController.text;
-            Navigator.of(context).pop(true);
+            Navigator.of(context).pop(EditResultType.submit);
           },
           child: const Text("Save"),
         ),
       ],
+    );
+  }
+
+  InputDecoration _decoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      border: const OutlineInputBorder(),
     );
   }
 }

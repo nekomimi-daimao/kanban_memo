@@ -5,6 +5,7 @@ import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/model/memo/category_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
+import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 import 'package:kanban_memo/widget/memo_card.dart';
 
 class CategoryList extends StatefulWidget {
@@ -102,15 +103,15 @@ class CategoryListState extends State<CategoryList> {
       return;
     }
     switch (edit.resultType) {
-      case EditDataResultType.cancel:
+      case EditResultType.cancel:
         // Nothing
         break;
-      case EditDataResultType.submit:
+      case EditResultType.submit:
         widget.categoryData.category = edit.input ?? "";
         Dao().putCategory(widget.categoryData);
         break;
-      case EditDataResultType.delete:
-        // TODO delete
+      case EditResultType.delete:
+        Dao().deleteCategory(widget.categoryData);
         break;
     }
   }

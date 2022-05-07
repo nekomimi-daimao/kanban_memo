@@ -6,11 +6,12 @@ import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/provider/board_providers.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
+import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 import 'package:kanban_memo/widget/kanban_board.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
 
 class MainPage extends HookConsumerWidget {
-  MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,7 +31,8 @@ class MainPage extends HookConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.edit_rounded),
                   onPressed: () async {
-                    _editBoard(context, ref.read(BoardProviders.boardSelectedProvider));
+                    _editBoard(context,
+                        ref.read(BoardProviders.boardSelectedProvider));
                   },
                 ),
               ],
@@ -99,15 +101,15 @@ class MainPage extends HookConsumerWidget {
       return;
     }
     switch (edit.resultType) {
-      case EditDataResultType.cancel:
+      case EditResultType.cancel:
         // Nothing
         break;
-      case EditDataResultType.submit:
+      case EditResultType.submit:
         boardData.title = edit.input ?? "";
         Dao().putBoard(boardData);
         break;
-      case EditDataResultType.delete:
-        // TODO delete
+      case EditResultType.delete:
+        Dao().deleteBoard(boardData);
         break;
     }
   }
