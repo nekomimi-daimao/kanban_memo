@@ -34,21 +34,16 @@ class EditTextDialog extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       title: Text(title),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextFormField(
-            controller: _textEditingController,
-            autofocus: true,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (v) {
-              if (v == null || v.isEmpty) {
-                return "Empty!";
-              }
-              return null;
-            },
-          ),
-        ],
+      content: TextFormField(
+        controller: _textEditingController,
+        autofocus: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (v) {
+          if (v == null || v.isEmpty) {
+            return "Empty!";
+          }
+          return null;
+        },
       ),
       actions: [
         OutlinedButton(
