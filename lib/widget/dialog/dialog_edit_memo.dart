@@ -71,6 +71,24 @@ class EditMemoDialog extends HookConsumerWidget {
               }
               ref.read(allowDeleteProvider.notifier).state = checked;
             }),
+        ElevatedButton(
+          onPressed: !ref.watch(allowDeleteProvider)
+              ? null
+              : () {
+                  // TODO delete
+                  Navigator.of(context).pop(true);
+                },
+          child: const Text(
+            "Delete",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.red,
+          ),
+        ),
         OutlinedButton(
           onPressed: () {
             Navigator.of(context).pop(false);
