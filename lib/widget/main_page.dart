@@ -39,12 +39,24 @@ class MainPage extends HookConsumerWidget {
               ],
             ),
             centerTitle: true,
-            actions: const [
-              Icon(Icons.settings_applications_rounded),
+            actions: [
+              Builder(builder: (BuildContext context) {
+                return IconButton(
+                  icon: const Icon(Icons.settings_applications_rounded),
+                  onPressed: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                );
+              }),
             ],
           ),
           body: KanbanBoard(ref.watch(BoardProviders.boardSelectedProvider)),
           drawer: Drawer(
+            child: ListView(
+              children: drawerItem,
+            ),
+          ),
+          endDrawer: Drawer(
             child: ListView(
               children: drawerItem,
             ),

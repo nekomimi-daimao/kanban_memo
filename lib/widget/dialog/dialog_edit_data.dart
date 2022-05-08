@@ -74,10 +74,11 @@ class EditDataDialog extends HookConsumerWidget {
                 Navigator.of(context)
                     .pop(const EditDataResult(EditResultType.delete, null));
               },
-        child: const Text(
+        child: Text(
           "Delete",
           style: TextStyle(
-            color: Colors.white,
+            color:
+                ref.watch(allowDeleteProvider) ? Colors.white : Colors.white30,
             fontWeight: FontWeight.bold,
           ),
         ),

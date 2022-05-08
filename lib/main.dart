@@ -22,13 +22,14 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var themeData = ThemeData(
+      textTheme: GoogleFonts.sawarabiGothicTextTheme(),
+    );
     return MaterialApp(
       title: "kanban memo",
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        textTheme: GoogleFonts.sawarabiGothicTextTheme(),
-      ),
-      home: MainPage(),
+      theme: themeData,
+      darkTheme: ThemeData.dark(),
+      home: const MainPage(),
     );
   }
 }
