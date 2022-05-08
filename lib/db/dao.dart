@@ -129,14 +129,23 @@ class Dao {
     if (categoryMemos.isEmpty) {
       return;
     }
-    var sample = categoryMemos.first;
-    memoData.boardId = sample.boardId;
-    memoData.categoryId = sample.categoryId;
+
+    var sameCategory = memoData.categoryId == categoryId;
+
+    if (!sameCategory) {
+      var sample = categoryMemos.first;
+      memoData.boardId = sample.boardId;
+      memoData.categoryId = sample.categoryId;
+    }
 
     var index = categoryMemos.indexWhere((e) => e.index == insertIndex);
     if (index < 0) {
       index = 0;
     }
+    if (sameCategory) {
+      categoryMemos.removeWhere((e) => e.id == memoData.id);
+    }
+
     categoryMemos.insert(index, memoData);
     categoryMemos.asMap().forEach((key, value) {
       value.index = key;

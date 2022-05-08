@@ -30,6 +30,10 @@ class MemoData {
     return 'MemoData{title: $title, memo: $memo}';
   }
 
+  String toStringFull() {
+    return 'MemoData{id: $id, boardId: $boardId, categoryId: $categoryId, index: $index, title: $title, memo: $memo}';
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
