@@ -45,7 +45,7 @@ class CategoryListState extends State<CategoryList> {
     );
 
     List<Widget> items = [];
-    items.addAll(memoData.map((e) => MemoCard(data: e)));
+    items.addAll(memoData.map((e) => MemoCard(memoData: e)));
     items.add(addTile);
 
     return SizedBox(

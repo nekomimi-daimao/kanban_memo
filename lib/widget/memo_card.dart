@@ -1,58 +1,66 @@
 import 'package:flutter/material.dart';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_memo.dart';
 import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 
-class MemoCard extends StatefulWidget {
-  final MemoData data;
+class MemoCard extends HookConsumerWidget {
+  final MemoData memoData;
 
-  const MemoCard({Key? key, required this.data}) : super(key: key);
-
-  @override
-  Key? get key => Key(data.id.toString());
+  MemoCard({Key? key, required this.memoData}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return _MemoCardState();
-  }
-}
+  Key? get key => Key(memoData.id.toString());
 
-class _MemoCardState extends State<MemoCard> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController memoController = TextEditingController();
+  final visibleStateProvider = AutoDisposeStateProvider<bool>((ref) => true);
 
   @override
-  void initState() {
-    super.initState();
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    var view = Visibility(
+      child: buildCard(context),
+      visible: ref.watch(visibleStateProvider),
+      maintainSize: true,
+      maintainState: true,
+      maintainAnimation: true,
+    );
 
-  @override
-  Widget build(BuildContext context) {
-    return ReorderableDelayedDragStartListener(
-      index: widget.data.index,
-      child: buildCard(),
+    return Draggable(
+      data: memoData,
+      child: view,
+      childWhenDragging: view,
+      feedback: const Icon(
+        Icons.abc,
+        size: 40,
+      ),
+      onDragStarted: () {
+        ref.read(visibleStateProvider.notifier).state = false;
+      },
+      onDragEnd: (d) {
+        ref.read(visibleStateProvider.notifier).state = true;
+      },
     );
   }
 
-  Card buildCard() {
+  Card buildCard(BuildContext context) {
     return Card(
       color: Theme.of(context).cardColor,
       child: InkWell(
         onTap: () {
-          _editMemo(widget.data);
+          _editMemo(context);
         },
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               Text(
-                widget.data.title,
+                memoData.title,
                 maxLines: 1,
               ),
               Text(
-                widget.data.memo,
+                memoData.memo,
                 maxLines: null,
               ),
             ],
@@ -62,7 +70,7 @@ class _MemoCardState extends State<MemoCard> {
     );
   }
 
-  Future _editMemo(MemoData memoData) async {
+  Future _editMemo(BuildContext context) async {
     var editResult = await EditMemoDialog.show(context, memoData);
     if (editResult == null) {
       return;
