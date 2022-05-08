@@ -30,7 +30,10 @@ class _MemoCardState extends State<MemoCard> {
 
   @override
   Widget build(BuildContext context) {
-    return buildCard();
+    return ReorderableDelayedDragStartListener(
+      index: widget.data.index,
+      child: buildCard(),
+    );
   }
 
   Card buildCard() {

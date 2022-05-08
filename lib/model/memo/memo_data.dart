@@ -29,4 +29,25 @@ class MemoData {
   String toString() {
     return 'MemoData{title: $title, memo: $memo}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MemoData &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          boardId == other.boardId &&
+          categoryId == other.categoryId &&
+          index == other.index &&
+          title == other.title &&
+          memo == other.memo;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      boardId.hashCode ^
+      categoryId.hashCode ^
+      index.hashCode ^
+      title.hashCode ^
+      memo.hashCode;
 }

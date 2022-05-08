@@ -28,13 +28,14 @@ class MainPage extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(ref.watch(BoardProviders.boardSelectedProvider).title),
-                IconButton(
-                  icon: const Icon(Icons.edit_rounded),
-                  onPressed: () async {
-                    _editBoard(context,
-                        ref.read(BoardProviders.boardSelectedProvider));
-                  },
-                ),
+                if (!ref.watch(BoardProviders.boardSelectedProvider).isEmpty())
+                  IconButton(
+                    icon: const Icon(Icons.edit_rounded),
+                    onPressed: () async {
+                      _editBoard(context,
+                          ref.read(BoardProviders.boardSelectedProvider));
+                    },
+                  ),
               ],
             ),
             centerTitle: true,
