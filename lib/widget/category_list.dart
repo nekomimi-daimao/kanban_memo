@@ -68,26 +68,10 @@ class CategoryListState extends State<CategoryList> {
             height: 12,
           ),
           Flexible(
-            child: ReorderableListView(
+            child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               primary: false,
-              buildDefaultDragHandles: false,
               children: items,
-              onReorder: (oldIndex, newIndex) {
-                if (items[oldIndex].key == addTile.key ||
-                    newIndex == items.length) {
-                  return;
-                }
-                if (oldIndex < newIndex) {
-                  newIndex -= 1;
-                }
-                var c = widget.memoData.removeAt(oldIndex);
-                widget.memoData.insert(newIndex, c);
-                widget.memoData.asMap().forEach((key, value) {
-                  value.index = key;
-                });
-                Dao().putAllMemo(widget.memoData);
-              },
             ),
           )
         ],
