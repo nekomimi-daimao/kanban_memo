@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/model/memo/category_data.dart';
@@ -8,7 +10,7 @@ import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
 import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 import 'package:kanban_memo/widget/memo_card.dart';
 
-class CategoryList extends StatefulWidget {
+class CategoryList extends HookConsumerWidget {
   const CategoryList(
       {Key? key,
       required this.boardData,
@@ -21,25 +23,16 @@ class CategoryList extends StatefulWidget {
   final List<MemoData> memoData;
 
   @override
-  State<StatefulWidget> createState() {
-    return CategoryListState();
-  }
-}
-
-class CategoryListState extends State<CategoryList> {
-  @override
-  Widget build(BuildContext context) {
-    var memoData = widget.memoData;
+  Widget build(BuildContext context, WidgetRef ref) {
     memoData.sort((a, b) => a.index.compareTo(b.index));
     var addTile = ListTile(
       key: const Key("add"),
       title: const Icon(Icons.add_box_rounded),
       onTap: () async {
-        var newMemo = MemoData.create(widget.boardData, widget.categoryData);
-        var lastIndex =
-            widget.memoData.isNotEmpty ? widget.memoData.last.index : 0;
+        var newMemo = MemoData.create(boardData, categoryData);
+        var lastIndex = memoData.isNotEmpty ? memoData.last.index : 0;
         newMemo.index = lastIndex + 1;
-        widget.memoData.add(newMemo);
+        memoData.add(newMemo);
         await Dao().putMemo(newMemo);
       },
     );
@@ -57,7 +50,7 @@ class CategoryListState extends State<CategoryList> {
           ),
           OutlinedButton(
             child: Text(
-              widget.categoryData.category,
+              categoryData.category,
               textAlign: TextAlign.center,
             ),
             onPressed: () {
@@ -81,7 +74,7 @@ class CategoryListState extends State<CategoryList> {
 
   Future _editCategory(BuildContext context) async {
     var builder = EditDataDialog.builder("Edit Category");
-    builder.initialValue = widget.categoryData.category;
+    builder.initialValue = categoryData.category;
     var edit = await builder.build().show(context);
     if (edit == null) {
       return;
@@ -91,11 +84,11 @@ class CategoryListState extends State<CategoryList> {
         // Nothing
         break;
       case EditResultType.submit:
-        widget.categoryData.category = edit.input ?? "";
-        Dao().putCategory(widget.categoryData);
+        categoryData.category = edit.input ?? "";
+        Dao().putCategory(categoryData);
         break;
       case EditResultType.delete:
-        Dao().deleteCategory(widget.categoryData);
+        Dao().deleteCategory(categoryData);
         break;
     }
   }
