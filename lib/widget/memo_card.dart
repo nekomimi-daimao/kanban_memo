@@ -19,18 +19,28 @@ class MemoCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var view = Visibility(
-      child: buildCard(context),
-      visible: ref.watch(visibleStateProvider),
-      maintainSize: true,
-      maintainState: true,
-      maintainAnimation: true,
+    var card = buildCard(context).visibility(ref.watch(visibleStateProvider));
+
+    var dragTarget = DragTarget(
+      builder: (BuildContext context, List<Object?> candidateData,
+          List<dynamic> rejectedData) {
+        return card;
+      },
+      onWillAccept: (draggable) {
+        if (draggable is! MemoData) {
+          return false;
+        }
+        return draggable != memoData;
+      },
+      onAccept: (draggable) {
+        // TODO sort data
+      },
     );
 
     return Draggable(
       data: memoData,
-      child: view,
-      childWhenDragging: view,
+      child: dragTarget,
+      childWhenDragging: card,
       feedback: const Icon(
         Icons.abc,
         size: 40,
@@ -86,5 +96,17 @@ class MemoCard extends HookConsumerWidget {
         Dao().deleteMemo(memoData);
         break;
     }
+  }
+}
+
+extension on Widget {
+  Visibility visibility(bool visible) {
+    return Visibility(
+      child: this,
+      visible: visible,
+      maintainSize: true,
+      maintainState: true,
+      maintainAnimation: true,
+    );
   }
 }
