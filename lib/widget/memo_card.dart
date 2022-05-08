@@ -33,7 +33,14 @@ class MemoCard extends HookConsumerWidget {
         return draggable != memoData;
       },
       onAccept: (draggable) {
-        // TODO sort data
+        if (draggable is! MemoData) {
+          return;
+        }
+        var categoryId = memoData.categoryId;
+        if (categoryId == null) {
+          return;
+        }
+        Dao().insertMemo(categoryId, draggable, memoData.index);
       },
     );
 

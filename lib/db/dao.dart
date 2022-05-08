@@ -85,6 +85,21 @@ class Dao {
     return _isar.memoDatas.filter().boardIdEqualTo(boardData.id).findAll();
   }
 
+  Future<List<MemoData>> boardMemoFromId(int boardDataId) {
+    return _isar.memoDatas.filter().boardIdEqualTo(boardDataId).findAll();
+  }
+
+  Future<List<MemoData>> categoryMemo(CategoryData categoryData) {
+    return _isar.memoDatas
+        .filter()
+        .categoryIdEqualTo(categoryData.id)
+        .findAll();
+  }
+
+  Future<List<MemoData>> categoryMemoFromId(int categoryDataId) {
+    return _isar.memoDatas.filter().categoryIdEqualTo(categoryDataId).findAll();
+  }
+
   Future putMemo(MemoData memoData) {
     return _isar.writeTxn((isar) async {
       memoData.id = await isar.memoDatas.put(memoData);
@@ -107,6 +122,26 @@ class Dao {
     return _isar.writeTxn((isar) async {
       boardData.id = await isar.boardDatas.put(boardData);
     });
+  }
+
+  Future insertMemo(int categoryId, MemoData memoData, int insertIndex) async {
+    var categoryMemos = await categoryMemoFromId(categoryId);
+    if (categoryMemos.isEmpty) {
+      return;
+    }
+    var sample = categoryMemos.first;
+    memoData.boardId = sample.boardId;
+    memoData.categoryId = sample.categoryId;
+
+    var index = categoryMemos.indexWhere((e) => e.index == insertIndex);
+    if (index < 0) {
+      index = 0;
+    }
+    categoryMemos.insert(index, memoData);
+    categoryMemos.asMap().forEach((key, value) {
+      value.index = key;
+    });
+    await putAllMemo(categoryMemos);
   }
 
   Future deleteMemo(MemoData memoData) {
