@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 
@@ -34,6 +35,8 @@ class EditMemoDialog extends HookConsumerWidget {
   });
 
   final allowDeleteProvider = AutoDisposeStateProvider<bool>((ref) => false);
+  final memoDataChangedProvider =
+      AutoDisposeStateProvider<bool>((ref) => false);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,6 +52,11 @@ class EditMemoDialog extends HookConsumerWidget {
               controller: titleController,
               maxLines: 1,
               decoration: _decoration("Title"),
+              onChanged: (v) {
+                if (v != memoData.title) {
+                  ref.read(memoDataChangedProvider.notifier).state = true;
+                }
+              },
             ),
             const SizedBox(
               height: 20,
@@ -60,6 +68,11 @@ class EditMemoDialog extends HookConsumerWidget {
                 minLines: 10,
                 decoration: _decoration("Memo"),
                 keyboardType: TextInputType.multiline,
+                onChanged: (v) {
+                  if (v != memoData.memo) {
+                    ref.read(memoDataChangedProvider.notifier).state = true;
+                  }
+                },
               ),
             ),
           ],
@@ -95,14 +108,17 @@ class EditMemoDialog extends HookConsumerWidget {
           onPressed: () {
             Navigator.of(context).pop(EditResultType.cancel);
           },
-          child: const Text("Cancel"),
+          child: const Text("Close"),
         ),
         ElevatedButton(
-          onPressed: () {
-            memoData.title = titleController.text;
-            memoData.memo = memoController.text;
-            Navigator.of(context).pop(EditResultType.submit);
-          },
+          onPressed: !ref.watch(memoDataChangedProvider)
+              ? null
+              : () async {
+                  memoData.title = titleController.text;
+                  memoData.memo = memoController.text;
+                  ref.read(memoDataChangedProvider.notifier).state = false;
+                  Dao().putMemo(memoData);
+                },
           child: const Text("Save"),
         ),
       ],
