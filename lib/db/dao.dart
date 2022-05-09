@@ -29,6 +29,7 @@ class Dao {
       MemoDataSchema,
       CategoryDataSchema,
       BoardDataSchema,
+      ConfigSchema,
     ];
 
     if (kIsWeb) {
