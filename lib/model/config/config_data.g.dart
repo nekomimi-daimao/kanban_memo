@@ -15,7 +15,7 @@ extension GetConfigCollection on Isar {
 const ConfigSchema = CollectionSchema(
   name: 'Config',
   schema:
-      '{"name":"Config","idName":"id","properties":[{"name":"categoryListWidth","type":"Long"},{"name":"hashCode","type":"Long"},{"name":"themeModeInt","type":"Long"}],"indexes":[],"links":[]}',
+      '{"name":"Config","idName":"id","properties":[{"name":"categoryListWidth","type":"Double"},{"name":"hashCode","type":"Long"},{"name":"themeModeInt","type":"Long"}],"indexes":[],"links":[]}',
   idName: 'id',
   propertyIds: {'categoryListWidth': 0, 'hashCode': 1, 'themeModeInt': 2},
   listProperties: {},
@@ -72,17 +72,18 @@ void _configSerializeNative(
   rawObj.buffer_length = size;
   final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
   final writer = IsarBinaryWriter(buffer, staticSize);
-  writer.writeLong(offsets[0], _categoryListWidth);
+  writer.writeDouble(offsets[0], _categoryListWidth);
   writer.writeLong(offsets[1], _hashCode);
   writer.writeLong(offsets[2], _themeModeInt);
 }
 
 Config _configDeserializeNative(IsarCollection<Config> collection, int id,
     IsarBinaryReader reader, List<int> offsets) {
-  final object = Config();
-  object.categoryListWidth = reader.readLong(offsets[0]);
-  object.id = id;
-  object.themeModeInt = reader.readLong(offsets[2]);
+  final object = Config(
+    categoryListWidth: reader.readDouble(offsets[0]),
+    id: id,
+    themeModeInt: reader.readLong(offsets[2]),
+  );
   return object;
 }
 
@@ -92,7 +93,7 @@ P _configDeserializePropNative<P>(
     case -1:
       return id as P;
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
@@ -112,13 +113,13 @@ dynamic _configSerializeWeb(IsarCollection<Config> collection, Config object) {
 }
 
 Config _configDeserializeWeb(IsarCollection<Config> collection, dynamic jsObj) {
-  final object = Config();
-  object.categoryListWidth =
-      IsarNative.jsObjectGet(jsObj, 'categoryListWidth') ??
-          double.negativeInfinity;
-  object.id = IsarNative.jsObjectGet(jsObj, 'id');
-  object.themeModeInt =
-      IsarNative.jsObjectGet(jsObj, 'themeModeInt') ?? double.negativeInfinity;
+  final object = Config(
+    categoryListWidth: IsarNative.jsObjectGet(jsObj, 'categoryListWidth') ??
+        double.negativeInfinity,
+    id: IsarNative.jsObjectGet(jsObj, 'id'),
+    themeModeInt: IsarNative.jsObjectGet(jsObj, 'themeModeInt') ??
+        double.negativeInfinity,
+  );
   return object;
 }
 
@@ -204,52 +205,34 @@ extension ConfigQueryWhere on QueryBuilder<Config, Config, QWhereClause> {
 }
 
 extension ConfigQueryFilter on QueryBuilder<Config, Config, QFilterCondition> {
-  QueryBuilder<Config, Config, QAfterFilterCondition> categoryListWidthEqualTo(
-      int value) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'categoryListWidth',
-      value: value,
-    ));
-  }
-
   QueryBuilder<Config, Config, QAfterFilterCondition>
-      categoryListWidthGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+      categoryListWidthGreaterThan(double value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.gt,
-      include: include,
+      include: false,
       property: 'categoryListWidth',
       value: value,
     ));
   }
 
   QueryBuilder<Config, Config, QAfterFilterCondition> categoryListWidthLessThan(
-    int value, {
-    bool include = false,
-  }) {
+      double value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.lt,
-      include: include,
+      include: false,
       property: 'categoryListWidth',
       value: value,
     ));
   }
 
   QueryBuilder<Config, Config, QAfterFilterCondition> categoryListWidthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
+      double lower, double upper) {
     return addFilterConditionInternal(FilterCondition.between(
       property: 'categoryListWidth',
       lower: lower,
-      includeLower: includeLower,
+      includeLower: false,
       upper: upper,
-      includeUpper: includeUpper,
+      includeUpper: false,
     ));
   }
 
@@ -495,7 +478,7 @@ extension ConfigQueryWhereDistinct on QueryBuilder<Config, Config, QDistinct> {
 }
 
 extension ConfigQueryProperty on QueryBuilder<Config, Config, QQueryProperty> {
-  QueryBuilder<Config, int, QQueryOperations> categoryListWidthProperty() {
+  QueryBuilder<Config, double, QQueryOperations> categoryListWidthProperty() {
     return addPropertyNameInternal('categoryListWidth');
   }
 

@@ -6,6 +6,7 @@ import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/model/memo/category_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
+import 'package:kanban_memo/provider/config_provider.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
 import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 import 'package:kanban_memo/widget/memo_card.dart';
@@ -41,8 +42,11 @@ class CategoryList extends HookConsumerWidget {
     items.addAll(memoData.map((e) => MemoCard(memoData: e)));
     items.add(addTile);
 
+    var sliderValue = ref.watch(ConfigProvider.configProvider
+        .select((value) => value.categoryListWidth));
+
     return SizedBox(
-      width: 200,
+      width: sliderValue,
       child: Column(
         children: [
           const SizedBox(

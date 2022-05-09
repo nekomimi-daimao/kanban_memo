@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kanban_memo/db/dao.dart';
+import 'package:kanban_memo/provider/config_provider.dart';
 import 'package:kanban_memo/widget/main_page.dart';
-import 'package:kanban_memo/widget/testbed.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +22,8 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var themeModeValue = ref.watch(
+        ConfigProvider.configProvider.select((value) => value.themeMode));
     var themeData = ThemeData(
       textTheme: GoogleFonts.sawarabiGothicTextTheme(),
     );
@@ -29,6 +31,7 @@ class MyApp extends HookConsumerWidget {
       title: "kanban memo",
       theme: themeData,
       darkTheme: ThemeData.dark(),
+      themeMode: themeModeValue,
       home: const MainPage(),
     );
   }

@@ -11,6 +11,7 @@ import 'package:isar/isar.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/model/memo/category_data.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
+import 'package:kanban_memo/model/config/config_data.dart';
 
 class Dao {
   static final Dao _instance = Dao._internal();
@@ -215,7 +216,7 @@ class Dao {
     });
   }
 
-  Future clearAll() {
+  Future clearAllMemo() {
     return _isar.writeTxn((isar) async {
       var allBoard = await isar.boardDatas.where().findAll();
       var deleteBoard = isar.boardDatas
@@ -231,5 +232,16 @@ class Dao {
 
       await Future.wait([deleteBoard, deleteCategory, deleteMemo]);
     });
+  }
+
+  Future putConfig(Config config) async {
+    config.id = Config.configId;
+    return _isar.writeTxn((isar) async {
+      isar.configs.put(config);
+    });
+  }
+
+  Future<Config?> config() {
+    return _isar.configs.get(Config.configId);
   }
 }

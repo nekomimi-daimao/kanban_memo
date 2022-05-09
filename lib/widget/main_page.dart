@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kanban_memo/db/dao.dart';
+import 'package:kanban_memo/model/config/config_data.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/provider/board_providers.dart';
+import 'package:kanban_memo/provider/config_provider.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
 import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 import 'package:kanban_memo/widget/kanban_board.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
+import 'package:kanban_memo/widget/util/extension_widget.dart';
 
 class MainPage extends HookConsumerWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -21,7 +24,7 @@ class MainPage extends HookConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => Text('Error: $err'),
       data: (boards) {
-        var drawerItem = _createDrawerItem(ref, context, boards);
+        var drawerItem = _createMemoDrawerItem(ref, context, boards);
         return Scaffold(
           appBar: AppBar(
             title: Row(
@@ -58,15 +61,28 @@ class MainPage extends HookConsumerWidget {
           ),
           endDrawer: Drawer(
             child: ListView(
-              children: drawerItem,
+              children: _createSettingsDrawerItem(ref, context),
             ),
           ),
+          onEndDrawerChanged: (isOpen) async {
+            if (isOpen) {
+              var savedConfig = await Dao().config();
+              if (savedConfig == null) {
+                return;
+              }
+              ref.read(ConfigProvider.configProvider.notifier).state =
+                  savedConfig;
+            } else {
+              var config = ref.read(ConfigProvider.configProvider);
+              Dao().putConfig(config);
+            }
+          },
         );
       },
     );
   }
 
-  List<Widget> _createDrawerItem(
+  List<Widget> _createMemoDrawerItem(
       WidgetRef ref, BuildContext context, List<BoardData> boards) {
     List<Widget> drawerItem = [];
     if (boards.isEmpty) {
@@ -102,6 +118,82 @@ class MainPage extends HookConsumerWidget {
       },
     );
     drawerItem.add(addTile);
+
+    return drawerItem;
+  }
+
+  List<Widget> _createSettingsDrawerItem(WidgetRef ref, BuildContext context) {
+    List<Widget> drawerItem = [];
+
+    var sliderValue = ref.watch(ConfigProvider.configProvider
+        .select((value) => value.categoryListWidth));
+    var categoryWidthSlider = Slider(
+      value: sliderValue,
+      label: sliderValue.round().toString(),
+      min: Config.categoryListWidthMin,
+      max: Config.categoryListWidthMax,
+      divisions:
+          (Config.categoryListWidthMax - Config.categoryListWidthMin) ~/ 20,
+      onChanged: (v) {
+        ref
+            .read(ConfigProvider.configProvider.notifier)
+            .update((state) => state.copyWith(categoryListWidth: v));
+      },
+    );
+    var sliderColumn = Column(
+      children: [
+        const ListTile(
+          title: Text("CategoryWidth"),
+        ),
+        categoryWidthSlider,
+      ],
+    );
+
+    drawerItem.addAll(sliderColumn.divider());
+
+    var themeModeValue = ref.watch(
+        ConfigProvider.configProvider.select((value) => value.themeMode));
+    var themeDropDown = DropdownButton<ThemeMode>(
+      value: themeModeValue,
+      items: ThemeMode.values
+          .map(
+            (e) => DropdownMenuItem(
+              value: e,
+              child: Text(e.toString().split(".").last),
+              onTap: null,
+            ),
+          )
+          .toList(),
+      onChanged: (v) {
+        if (v == null) {
+          return;
+        }
+        FocusManager.instance.primaryFocus?.unfocus();
+        ref
+            .read(ConfigProvider.configProvider.notifier)
+            .update((state) => state.copyWith(themeModeInt: v.index));
+      },
+    );
+
+    var themeColumn = Column(
+      children: [
+        const ListTile(
+          title: Text("Theme"),
+        ),
+        themeDropDown,
+      ],
+    );
+
+    drawerItem.addAll(themeColumn.divider());
+
+    var about = const AboutListTile(
+      icon: Icon(Icons.info_outline_rounded),
+      // applicationVersion: '1.0.0',
+      // applicationIcon: Icon(Icons.wb_incandescent),
+      applicationLegalese: '2022 NekomimiDaimao',
+      // aboutBoxChildren: [Text("data")],
+    );
+    drawerItem.add(about);
 
     return drawerItem;
   }

@@ -6,6 +6,7 @@ import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_memo.dart';
 import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
+import 'package:kanban_memo/widget/util/extension_widget.dart';
 
 class MemoCard extends HookConsumerWidget {
   final MemoData memoData;
@@ -103,17 +104,5 @@ class MemoCard extends HookConsumerWidget {
         Dao().deleteMemo(memoData);
         break;
     }
-  }
-}
-
-extension on Widget {
-  Visibility visibility(bool visible) {
-    return Visibility(
-      child: this,
-      visible: visible,
-      maintainSize: true,
-      maintainState: true,
-      maintainAnimation: true,
-    );
   }
 }
