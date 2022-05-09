@@ -171,13 +171,11 @@ class Dao {
       return Future.value();
     }
     return _isar.writeTxn((isar) async {
-      var memos = await _isar.memoDatas
-          .filter()
-          .categoryIdEqualTo(id)
-          .idProperty()
-          .findAll();
+      var memos =
+          await _isar.memoDatas.filter().categoryIdEqualTo(id).findAll();
 
-      var deleteMemo = _isar.memoDatas.deleteAll(memos.whereNotNull().toList());
+      var deleteMemo = _isar.memoDatas
+          .deleteAll(memos.map((e) => e.id).whereNotNull().toList());
       var deleteCategory = _isar.categoryDatas.delete(id);
       await Future.wait([
         deleteMemo,
@@ -192,28 +190,17 @@ class Dao {
       return Future.value();
     }
     return _isar.writeTxn((isar) async {
-      var memos = await _isar.memoDatas
-          .filter()
-          .boardIdEqualTo(id)
-          .idProperty()
-          .findAll();
-      var deleteMemo = _isar.memoDatas.deleteAll(memos.whereNotNull().toList());
+      var memos = await _isar.memoDatas.filter().boardIdEqualTo(id).findAll();
+      var categories =
+          await _isar.categoryDatas.filter().boardIdEqualTo(id).findAll();
 
-      var categories = await _isar.categoryDatas
-          .filter()
-          .boardIdEqualTo(id)
-          .idProperty()
-          .findAll();
-      var deleteCategory =
-          _isar.categoryDatas.deleteAll(categories.whereNotNull().toList());
+      await _isar.memoDatas
+          .deleteAll(memos.map((e) => e.id).whereNotNull().toList());
 
-      var deleteBoard = _isar.boardDatas.delete(id);
+      await _isar.categoryDatas
+          .deleteAll(categories.map((e) => e.id).whereNotNull().toList());
 
-      await Future.wait([
-        deleteMemo,
-        deleteCategory,
-        deleteBoard,
-      ]);
+      await _isar.boardDatas.delete(id);
     });
   }
 
