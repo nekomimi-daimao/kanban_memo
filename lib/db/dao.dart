@@ -169,8 +169,13 @@ class Dao {
       return Future.value();
     }
     return _isar.writeTxn((isar) async {
-      var deleteMemo =
-          _isar.memoDatas.filter().categoryIdEqualTo(id).deleteAll();
+      var memos = await _isar.memoDatas
+          .filter()
+          .categoryIdEqualTo(id)
+          .idProperty()
+          .findAll();
+
+      var deleteMemo = _isar.memoDatas.deleteAll(memos.whereNotNull().toList());
       var deleteCategory = _isar.categoryDatas.delete(id);
       await Future.wait([
         deleteMemo,
@@ -185,10 +190,23 @@ class Dao {
       return Future.value();
     }
     return _isar.writeTxn((isar) async {
-      var deleteMemo = _isar.memoDatas.filter().boardIdEqualTo(id).deleteAll();
+      var memos = await _isar.memoDatas
+          .filter()
+          .boardIdEqualTo(id)
+          .idProperty()
+          .findAll();
+      var deleteMemo = _isar.memoDatas.deleteAll(memos.whereNotNull().toList());
+
+      var categories = await _isar.categoryDatas
+          .filter()
+          .boardIdEqualTo(id)
+          .idProperty()
+          .findAll();
       var deleteCategory =
-          _isar.categoryDatas.filter().boardIdEqualTo(id).deleteAll();
+          _isar.categoryDatas.deleteAll(categories.whereNotNull().toList());
+
       var deleteBoard = _isar.boardDatas.delete(id);
+
       await Future.wait([
         deleteMemo,
         deleteCategory,

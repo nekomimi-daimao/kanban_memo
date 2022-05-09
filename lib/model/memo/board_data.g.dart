@@ -15,9 +15,9 @@ extension GetBoardDataCollection on Isar {
 const BoardDataSchema = CollectionSchema(
   name: 'BoardData',
   schema:
-      '{"name":"BoardData","idName":"id","properties":[{"name":"created","type":"Long"},{"name":"title","type":"String"}],"indexes":[],"links":[]}',
+      '{"name":"BoardData","idName":"id","properties":[{"name":"created","type":"Long"},{"name":"hashCode","type":"Long"},{"name":"title","type":"String"}],"indexes":[],"links":[]}',
   idName: 'id',
-  propertyIds: {'created': 0, 'title': 1},
+  propertyIds: {'created': 0, 'hashCode': 1, 'title': 2},
   listProperties: {},
   indexIds: {},
   indexValueTypes: {},
@@ -62,8 +62,10 @@ void _boardDataSerializeNative(
   var dynamicSize = 0;
   final value0 = object.created;
   final _created = value0;
-  final value1 = object.title;
-  final _title = IsarBinaryWriter.utf8Encoder.convert(value1);
+  final value1 = object.hashCode;
+  final _hashCode = value1;
+  final value2 = object.title;
+  final _title = IsarBinaryWriter.utf8Encoder.convert(value2);
   dynamicSize += (_title.length) as int;
   final size = staticSize + dynamicSize;
 
@@ -72,7 +74,8 @@ void _boardDataSerializeNative(
   final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
   final writer = IsarBinaryWriter(buffer, staticSize);
   writer.writeDateTime(offsets[0], _created);
-  writer.writeBytes(offsets[1], _title);
+  writer.writeLong(offsets[1], _hashCode);
+  writer.writeBytes(offsets[2], _title);
 }
 
 BoardData _boardDataDeserializeNative(IsarCollection<BoardData> collection,
@@ -80,7 +83,7 @@ BoardData _boardDataDeserializeNative(IsarCollection<BoardData> collection,
   final object = BoardData();
   object.created = reader.readDateTime(offsets[0]);
   object.id = id;
-  object.title = reader.readString(offsets[1]);
+  object.title = reader.readString(offsets[2]);
   return object;
 }
 
@@ -92,6 +95,8 @@ P _boardDataDeserializePropNative<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
+      return (reader.readLong(offset)) as P;
+    case 2:
       return (reader.readString(offset)) as P;
     default:
       throw 'Illegal propertyIndex';
@@ -103,6 +108,7 @@ dynamic _boardDataSerializeWeb(
   final jsObj = IsarNative.newJsObject();
   IsarNative.jsObjectSet(
       jsObj, 'created', object.created.toUtc().millisecondsSinceEpoch);
+  IsarNative.jsObjectSet(jsObj, 'hashCode', object.hashCode);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
   IsarNative.jsObjectSet(jsObj, 'title', object.title);
   return jsObj;
@@ -131,6 +137,9 @@ P _boardDataDeserializePropWeb<P>(Object jsObj, String propertyName) {
                   isUtc: true)
               .toLocal()
           : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+    case 'hashCode':
+      return (IsarNative.jsObjectGet(jsObj, 'hashCode') ??
+          double.negativeInfinity) as P;
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
     case 'title':
@@ -248,6 +257,54 @@ extension BoardDataQueryFilter
   }) {
     return addFilterConditionInternal(FilterCondition.between(
       property: 'created',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> hashCodeEqualTo(
+      int value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'hashCode',
       lower: lower,
       includeLower: includeLower,
       upper: upper,
@@ -428,6 +485,14 @@ extension BoardDataQueryWhereSortBy
     return addSortByInternal('created', Sort.desc);
   }
 
+  QueryBuilder<BoardData, BoardData, QAfterSortBy> sortByHashCode() {
+    return addSortByInternal('hashCode', Sort.asc);
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterSortBy> sortByHashCodeDesc() {
+    return addSortByInternal('hashCode', Sort.desc);
+  }
+
   QueryBuilder<BoardData, BoardData, QAfterSortBy> sortById() {
     return addSortByInternal('id', Sort.asc);
   }
@@ -455,6 +520,14 @@ extension BoardDataQueryWhereSortThenBy
     return addSortByInternal('created', Sort.desc);
   }
 
+  QueryBuilder<BoardData, BoardData, QAfterSortBy> thenByHashCode() {
+    return addSortByInternal('hashCode', Sort.asc);
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterSortBy> thenByHashCodeDesc() {
+    return addSortByInternal('hashCode', Sort.desc);
+  }
+
   QueryBuilder<BoardData, BoardData, QAfterSortBy> thenById() {
     return addSortByInternal('id', Sort.asc);
   }
@@ -478,6 +551,10 @@ extension BoardDataQueryWhereDistinct
     return addDistinctByInternal('created');
   }
 
+  QueryBuilder<BoardData, BoardData, QDistinct> distinctByHashCode() {
+    return addDistinctByInternal('hashCode');
+  }
+
   QueryBuilder<BoardData, BoardData, QDistinct> distinctById() {
     return addDistinctByInternal('id');
   }
@@ -492,6 +569,10 @@ extension BoardDataQueryProperty
     on QueryBuilder<BoardData, BoardData, QQueryProperty> {
   QueryBuilder<BoardData, DateTime, QQueryOperations> createdProperty() {
     return addPropertyNameInternal('created');
+  }
+
+  QueryBuilder<BoardData, int, QQueryOperations> hashCodeProperty() {
+    return addPropertyNameInternal('hashCode');
   }
 
   QueryBuilder<BoardData, int?, QQueryOperations> idProperty() {

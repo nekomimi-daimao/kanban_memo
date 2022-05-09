@@ -15,14 +15,15 @@ extension GetMemoDataCollection on Isar {
 const MemoDataSchema = CollectionSchema(
   name: 'MemoData',
   schema:
-      '{"name":"MemoData","idName":"id","properties":[{"name":"boardId","type":"Long"},{"name":"categoryId","type":"Long"},{"name":"index","type":"Long"},{"name":"memo","type":"String"},{"name":"title","type":"String"}],"indexes":[],"links":[]}',
+      '{"name":"MemoData","idName":"id","properties":[{"name":"boardId","type":"Long"},{"name":"categoryId","type":"Long"},{"name":"hashCode","type":"Long"},{"name":"index","type":"Long"},{"name":"memo","type":"String"},{"name":"title","type":"String"}],"indexes":[],"links":[]}',
   idName: 'id',
   propertyIds: {
     'boardId': 0,
     'categoryId': 1,
-    'index': 2,
-    'memo': 3,
-    'title': 4
+    'hashCode': 2,
+    'index': 3,
+    'memo': 4,
+    'title': 5
   },
   listProperties: {},
   indexIds: {},
@@ -70,13 +71,15 @@ void _memoDataSerializeNative(
   final _boardId = value0;
   final value1 = object.categoryId;
   final _categoryId = value1;
-  final value2 = object.index;
-  final _index = value2;
-  final value3 = object.memo;
-  final _memo = IsarBinaryWriter.utf8Encoder.convert(value3);
+  final value2 = object.hashCode;
+  final _hashCode = value2;
+  final value3 = object.index;
+  final _index = value3;
+  final value4 = object.memo;
+  final _memo = IsarBinaryWriter.utf8Encoder.convert(value4);
   dynamicSize += (_memo.length) as int;
-  final value4 = object.title;
-  final _title = IsarBinaryWriter.utf8Encoder.convert(value4);
+  final value5 = object.title;
+  final _title = IsarBinaryWriter.utf8Encoder.convert(value5);
   dynamicSize += (_title.length) as int;
   final size = staticSize + dynamicSize;
 
@@ -86,9 +89,10 @@ void _memoDataSerializeNative(
   final writer = IsarBinaryWriter(buffer, staticSize);
   writer.writeLong(offsets[0], _boardId);
   writer.writeLong(offsets[1], _categoryId);
-  writer.writeLong(offsets[2], _index);
-  writer.writeBytes(offsets[3], _memo);
-  writer.writeBytes(offsets[4], _title);
+  writer.writeLong(offsets[2], _hashCode);
+  writer.writeLong(offsets[3], _index);
+  writer.writeBytes(offsets[4], _memo);
+  writer.writeBytes(offsets[5], _title);
 }
 
 MemoData _memoDataDeserializeNative(IsarCollection<MemoData> collection, int id,
@@ -98,9 +102,9 @@ MemoData _memoDataDeserializeNative(IsarCollection<MemoData> collection, int id,
     categoryId: reader.readLongOrNull(offsets[1]),
   );
   object.id = id;
-  object.index = reader.readLong(offsets[2]);
-  object.memo = reader.readString(offsets[3]);
-  object.title = reader.readString(offsets[4]);
+  object.index = reader.readLong(offsets[3]);
+  object.memo = reader.readString(offsets[4]);
+  object.title = reader.readString(offsets[5]);
   return object;
 }
 
@@ -116,8 +120,10 @@ P _memoDataDeserializePropNative<P>(
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
       return (reader.readString(offset)) as P;
     default:
       throw 'Illegal propertyIndex';
@@ -129,6 +135,7 @@ dynamic _memoDataSerializeWeb(
   final jsObj = IsarNative.newJsObject();
   IsarNative.jsObjectSet(jsObj, 'boardId', object.boardId);
   IsarNative.jsObjectSet(jsObj, 'categoryId', object.categoryId);
+  IsarNative.jsObjectSet(jsObj, 'hashCode', object.hashCode);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
   IsarNative.jsObjectSet(jsObj, 'index', object.index);
   IsarNative.jsObjectSet(jsObj, 'memo', object.memo);
@@ -156,6 +163,9 @@ P _memoDataDeserializePropWeb<P>(Object jsObj, String propertyName) {
       return (IsarNative.jsObjectGet(jsObj, 'boardId')) as P;
     case 'categoryId':
       return (IsarNative.jsObjectGet(jsObj, 'categoryId')) as P;
+    case 'hashCode':
+      return (IsarNative.jsObjectGet(jsObj, 'hashCode') ??
+          double.negativeInfinity) as P;
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
     case 'index':
@@ -340,6 +350,54 @@ extension MemoDataQueryFilter
   }) {
     return addFilterConditionInternal(FilterCondition.between(
       property: 'categoryId',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<MemoData, MemoData, QAfterFilterCondition> hashCodeEqualTo(
+      int value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<MemoData, MemoData, QAfterFilterCondition> hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<MemoData, MemoData, QAfterFilterCondition> hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'hashCode',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<MemoData, MemoData, QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'hashCode',
       lower: lower,
       includeLower: includeLower,
       upper: upper,
@@ -678,6 +736,14 @@ extension MemoDataQueryWhereSortBy
     return addSortByInternal('categoryId', Sort.desc);
   }
 
+  QueryBuilder<MemoData, MemoData, QAfterSortBy> sortByHashCode() {
+    return addSortByInternal('hashCode', Sort.asc);
+  }
+
+  QueryBuilder<MemoData, MemoData, QAfterSortBy> sortByHashCodeDesc() {
+    return addSortByInternal('hashCode', Sort.desc);
+  }
+
   QueryBuilder<MemoData, MemoData, QAfterSortBy> sortById() {
     return addSortByInternal('id', Sort.asc);
   }
@@ -729,6 +795,14 @@ extension MemoDataQueryWhereSortThenBy
     return addSortByInternal('categoryId', Sort.desc);
   }
 
+  QueryBuilder<MemoData, MemoData, QAfterSortBy> thenByHashCode() {
+    return addSortByInternal('hashCode', Sort.asc);
+  }
+
+  QueryBuilder<MemoData, MemoData, QAfterSortBy> thenByHashCodeDesc() {
+    return addSortByInternal('hashCode', Sort.desc);
+  }
+
   QueryBuilder<MemoData, MemoData, QAfterSortBy> thenById() {
     return addSortByInternal('id', Sort.asc);
   }
@@ -772,6 +846,10 @@ extension MemoDataQueryWhereDistinct
     return addDistinctByInternal('categoryId');
   }
 
+  QueryBuilder<MemoData, MemoData, QDistinct> distinctByHashCode() {
+    return addDistinctByInternal('hashCode');
+  }
+
   QueryBuilder<MemoData, MemoData, QDistinct> distinctById() {
     return addDistinctByInternal('id');
   }
@@ -799,6 +877,10 @@ extension MemoDataQueryProperty
 
   QueryBuilder<MemoData, int?, QQueryOperations> categoryIdProperty() {
     return addPropertyNameInternal('categoryId');
+  }
+
+  QueryBuilder<MemoData, int, QQueryOperations> hashCodeProperty() {
+    return addPropertyNameInternal('hashCode');
   }
 
   QueryBuilder<MemoData, int?, QQueryOperations> idProperty() {
