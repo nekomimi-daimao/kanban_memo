@@ -35,7 +35,7 @@ class MainPage extends HookConsumerWidget {
                   IconButton(
                     icon: const Icon(Icons.edit_rounded),
                     onPressed: () async {
-                      _editBoard(context,
+                      _editBoard(ref, context,
                           ref.read(BoardProviders.boardSelectedProvider));
                     },
                   ),
@@ -198,7 +198,8 @@ class MainPage extends HookConsumerWidget {
     return drawerItem;
   }
 
-  Future _editBoard(BuildContext context, BoardData boardData) async {
+  Future _editBoard(
+      WidgetRef ref, BuildContext context, BoardData boardData) async {
     var builder = EditDataDialog.builder("Edit Category");
     builder.initialValue = boardData.title;
     var edit = await builder.build().show(context);
@@ -215,6 +216,8 @@ class MainPage extends HookConsumerWidget {
         break;
       case EditResultType.delete:
         Dao().deleteBoard(boardData);
+        ref.read(BoardProviders.boardSelectedProvider.notifier).state =
+            BoardData.empty();
         break;
     }
   }
