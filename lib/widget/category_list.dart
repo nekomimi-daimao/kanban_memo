@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -25,7 +27,6 @@ class CategoryList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    memoData.sort((a, b) => a.index.compareTo(b.index));
     var addTile = ListTile(
       key: const Key("add"),
       title: const Icon(Icons.add_box_rounded),
@@ -37,10 +38,29 @@ class CategoryList extends HookConsumerWidget {
         await Dao().putMemo(newMemo);
       },
     );
+    var dragTarget = DragTarget(builder: (BuildContext context,
+        List<Object?> candidateData, List<dynamic> rejectedData) {
+      return addTile;
+    }, onWillAccept: (draggable) {
+      return draggable is MemoData;
+    }, onAccept: (draggable) {
+      if (draggable is! MemoData) {
+        return;
+      }
+      var categoryId = categoryData.id;
+      if (categoryId == null) {
+        return;
+      }
+      var m = memoData.map((e) => e.index).reduce(max);
+
+      Dao().insertMemo(categoryId, draggable, m);
+    });
+
+    memoData.sort((a, b) => a.index.compareTo(b.index));
 
     List<Widget> items = [];
     items.addAll(memoData.map((e) => MemoCard(memoData: e)));
-    items.add(addTile);
+    items.add(dragTarget);
 
     var sliderValue = ref.watch(ConfigProvider.configProvider
         .select((value) => value.categoryListWidth));

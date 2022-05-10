@@ -86,10 +86,13 @@ class MainPage extends HookConsumerWidget {
       WidgetRef ref, BuildContext context, List<BoardData> boards) {
     List<Widget> drawerItem = [];
     if (boards.isEmpty) {
-      drawerItem.add(const Text(
-        "No Board",
-        textAlign: TextAlign.center,
-      ));
+      var drawerHeader = DrawerHeader(
+        child: const Text(
+          "No Board",
+          textAlign: TextAlign.center,
+        ).center(),
+      );
+      drawerItem.add(drawerHeader);
     } else {
       for (var v in boards) {
         drawerItem.add(

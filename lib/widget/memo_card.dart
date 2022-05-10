@@ -26,9 +26,10 @@ class MemoCard extends HookConsumerWidget {
       data: memoData,
       child: card,
       childWhenDragging: card,
+      dragAnchorStrategy: pointerDragAnchorStrategy,
       feedback: const Icon(
-        Icons.abc,
-        size: 40,
+        Icons.text_snippet_outlined,
+        size: 60,
       ),
       onDragStarted: () {
         ref.read(visibleStateProvider.notifier).state = false;
