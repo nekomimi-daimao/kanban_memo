@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -25,13 +26,16 @@ class MyApp extends HookConsumerWidget {
     var themeModeValue = ref.watch(
         ConfigProvider.configProvider.select((value) => value.themeMode));
     var themeData = ThemeData(
-      textTheme: GoogleFonts.sawarabiGothicTextTheme(),
+      textTheme: kIsWeb
+          ? GoogleFonts.sawarabiGothicTextTheme(Theme.of(context).textTheme)
+          : null,
     );
     return MaterialApp(
       title: "kanban memo",
       theme: themeData,
       darkTheme: ThemeData.dark(),
       themeMode: themeModeValue,
+      debugShowCheckedModeBanner: false,
       home: const MainPage(),
     );
   }
