@@ -28,6 +28,12 @@ extension WidgetExtension on Widget {
       maintainAnimation: true,
     );
   }
+
+  Center center() {
+    return Center(
+      child: this,
+    );
+  }
 }
 
 extension WidgetsExtension on List<Widget> {

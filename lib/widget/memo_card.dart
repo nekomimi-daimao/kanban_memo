@@ -22,10 +22,26 @@ class MemoCard extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var card = buildCard(context).visibility(ref.watch(visibleStateProvider));
 
+    var draggable = Draggable(
+      data: memoData,
+      child: card,
+      childWhenDragging: card,
+      feedback: const Icon(
+        Icons.abc,
+        size: 40,
+      ),
+      onDragStarted: () {
+        ref.read(visibleStateProvider.notifier).state = false;
+      },
+      onDragEnd: (d) {
+        ref.read(visibleStateProvider.notifier).state = true;
+      },
+    );
+
     var dragTarget = DragTarget(
       builder: (BuildContext context, List<Object?> candidateData,
           List<dynamic> rejectedData) {
-        return card;
+        return draggable;
       },
       onWillAccept: (draggable) {
         if (draggable is! MemoData) {
@@ -45,21 +61,7 @@ class MemoCard extends HookConsumerWidget {
       },
     );
 
-    return Draggable(
-      data: memoData,
-      child: dragTarget,
-      childWhenDragging: card,
-      feedback: const Icon(
-        Icons.abc,
-        size: 40,
-      ),
-      onDragStarted: () {
-        ref.read(visibleStateProvider.notifier).state = false;
-      },
-      onDragEnd: (d) {
-        ref.read(visibleStateProvider.notifier).state = true;
-      },
-    );
+    return dragTarget;
   }
 
   Card buildCard(BuildContext context) {

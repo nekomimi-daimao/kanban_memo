@@ -21,7 +21,7 @@ class MainPage extends HookConsumerWidget {
     AsyncValue<List<BoardData>> boards =
         ref.watch(BoardProviders.boardListProvider);
     return boards.when(
-      loading: () => const CircularProgressIndicator(),
+      loading: () => const CircularProgressIndicator().center(),
       error: (err, stack) => Text('Error: $err'),
       data: (boards) {
         var drawerItem = _createMemoDrawerItem(ref, context, boards);
