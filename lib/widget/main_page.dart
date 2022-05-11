@@ -85,6 +85,7 @@ class MainPage extends HookConsumerWidget {
   List<Widget> _createMemoDrawerItem(
       WidgetRef ref, BuildContext context, List<BoardData> boards) {
     List<Widget> drawerItem = [];
+
     if (boards.isEmpty) {
       var drawerHeader = DrawerHeader(
         child: const Text(
@@ -92,12 +93,24 @@ class MainPage extends HookConsumerWidget {
           textAlign: TextAlign.center,
         ).center(),
       );
-      drawerItem.add(drawerHeader);
+      drawerItem.addAll(drawerHeader.divider());
     } else {
+      var titleTile = ListTile(
+        title: const Text(
+          "Boards",
+          textAlign: TextAlign.center,
+        ).center(),
+      );
+      drawerItem.addAll(titleTile.divider());
+
       for (var v in boards) {
         drawerItem.add(
           ListTile(
-            title: Text(v.title),
+            title: Text(
+              v.title,
+            ).padding(
+              const EdgeInsets.only(left: 20),
+            ),
             onTap: () {
               ref.read(BoardProviders.boardSelectedProvider.notifier).state = v;
             },
@@ -127,6 +140,20 @@ class MainPage extends HookConsumerWidget {
 
   List<Widget> _createSettingsDrawerItem(WidgetRef ref, BuildContext context) {
     List<Widget> drawerItem = [];
+
+    var titleTile = ListTile(
+      trailing: IconButton(
+        icon: const Icon(Icons.settings_applications_rounded),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      title: const Text(
+        "Setting",
+        textAlign: TextAlign.center,
+      ),
+    );
+    drawerItem.addAll(titleTile.divider());
 
     var sliderValue = ref.watch(ConfigProvider.configProvider
         .select((value) => value.categoryListWidth));

@@ -4,7 +4,9 @@ extension WidgetExtension on Widget {
   List<Widget> divider() {
     return [
       this,
-      const Divider(),
+      const Divider(
+        thickness: 4,
+      ),
     ];
   }
 
@@ -19,6 +21,19 @@ extension WidgetExtension on Widget {
     return Flexible(child: this);
   }
 
+  Padding padding(EdgeInsets insets) {
+    return Padding(
+      padding: insets,
+      child: this,
+    );
+  }
+
+  Center center() {
+    return Center(
+      child: this,
+    );
+  }
+
   Visibility visibility(bool visible) {
     return Visibility(
       child: this,
@@ -28,19 +43,15 @@ extension WidgetExtension on Widget {
       maintainAnimation: true,
     );
   }
-
-  Center center() {
-    return Center(
-      child: this,
-    );
-  }
 }
 
 extension WidgetsExtension on List<Widget> {
   List<Widget> divider() {
     return [
       ...this,
-      const Divider(),
+      const Divider(
+        thickness: 4,
+      ),
     ];
   }
 

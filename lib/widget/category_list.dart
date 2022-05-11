@@ -61,11 +61,11 @@ class CategoryList extends HookConsumerWidget {
     items.addAll(memoData.map((e) => MemoCard(memoData: e)));
     items.add(dragTarget);
 
-    var sliderValue = ref.watch(ConfigProvider.configProvider
+    var categoryListWith = ref.watch(ConfigProvider.configProvider
         .select((value) => value.categoryListWidth));
 
     return SizedBox(
-      width: sliderValue,
+      width: categoryListWith,
       child: Column(
         children: [
           const SizedBox(
