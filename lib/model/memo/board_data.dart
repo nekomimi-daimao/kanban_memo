@@ -13,7 +13,7 @@ class BoardData {
   BoardData();
 
   BoardData.create(this.title) {
-    created = DateTime.now();
+    created = DateTime.now().toUtc();
   }
 
   BoardData.empty() {

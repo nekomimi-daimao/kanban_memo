@@ -17,7 +17,7 @@ class CategoryData {
 
   CategoryData.create(BoardData boardData, this.category) {
     boardId = boardData.id;
-    created = DateTime.now();
+    created = DateTime.now().toUtc();
   }
 
   @override

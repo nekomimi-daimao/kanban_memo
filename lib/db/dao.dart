@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 
@@ -24,14 +25,14 @@ class Dao {
 
   late Isar _isar;
 
-  Future initialize() async {
-    var schemas = [
-      MemoDataSchema,
-      CategoryDataSchema,
-      BoardDataSchema,
-      ConfigSchema,
-    ];
+  List<CollectionSchema<Object>> schemas = [
+    MemoDataSchema,
+    CategoryDataSchema,
+    BoardDataSchema,
+    ConfigSchema,
+  ];
 
+  Future initialize() async {
     if (kIsWeb) {
       _isar = await Isar.open(
         schemas: schemas,
@@ -237,6 +238,32 @@ class Dao {
 
       await Future.wait([deleteBoard, deleteCategory, deleteMemo]);
     });
+  }
+
+  Future<String> exportJson() async {
+    Map<String, IsarCollection> collections = {
+      _isar.memoDatas.name: _isar.memoDatas,
+      _isar.categoryDatas.name: _isar.categoryDatas,
+      _isar.boardDatas.name: _isar.boardDatas,
+      _isar.categoryDatas.name: _isar.categoryDatas,
+    };
+
+    Map<String, List<dynamic>> toJsonMap = {};
+
+    for (var k in collections.keys) {
+      var collection = collections[k];
+      if (collection == null) {
+        continue;
+      }
+      toJsonMap[k] = await collection.where().exportJson();
+    }
+
+    return jsonEncode(toJsonMap);
+  }
+
+  void importJson() {
+
+
   }
 
   Future putConfig(Config config) async {

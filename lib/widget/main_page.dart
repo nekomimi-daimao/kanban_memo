@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kanban_memo/db/dao.dart';
+import 'package:kanban_memo/db/db_to_json.dart';
 import 'package:kanban_memo/model/config/config_data.dart';
 import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/provider/board_providers.dart';
@@ -153,6 +154,7 @@ class MainPage extends HookConsumerWidget {
         textAlign: TextAlign.center,
       ),
     );
+
     drawerItem.addAll(titleTile.divider());
 
     var sliderValue = ref.watch(ConfigProvider.configProvider
@@ -170,6 +172,7 @@ class MainPage extends HookConsumerWidget {
             .update((state) => state.copyWith(categoryListWidth: v));
       },
     );
+
     var sliderColumn = Column(
       children: [
         const ListTile(
@@ -216,6 +219,25 @@ class MainPage extends HookConsumerWidget {
 
     drawerItem.addAll(themeColumn.divider());
 
+    var jsonTile = const ListTile(
+      title: Text(
+        "Import / Export",
+      ),
+    );
+    drawerItem.add(jsonTile);
+
+    var exportTile = ListTile(
+      title: const Text(
+        "Export",
+        textAlign: TextAlign.center,
+      ),
+      onTap: () async {
+        var json = await Dao().exportJson();
+        DbToJson.export(json);
+      },
+    );
+    drawerItem.add(exportTile);
+
     var about = const AboutListTile(
       icon: Icon(Icons.info_outline_rounded),
       // applicationVersion: '1.0.0',
@@ -223,6 +245,7 @@ class MainPage extends HookConsumerWidget {
       applicationLegalese: '2022 NekomimiDaimao',
       // aboutBoxChildren: [Text("data")],
     );
+
     drawerItem.add(about);
 
     return drawerItem;
