@@ -51,9 +51,8 @@ class CategoryList extends HookConsumerWidget {
       if (categoryId == null) {
         return;
       }
-      var m = memoData.map((e) => e.index).reduce(max);
 
-      Dao().insertMemo(categoryId, draggable, m);
+      Dao().insertMemo(categoryId, draggable, -1);
     });
 
     memoData.sort((a, b) => a.index.compareTo(b.index));

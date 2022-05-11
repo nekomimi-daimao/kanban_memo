@@ -99,7 +99,11 @@ class Dao {
   }
 
   Future<List<MemoData>> categoryMemoFromId(int categoryDataId) {
-    return _isar.memoDatas.filter().categoryIdEqualTo(categoryDataId).findAll();
+    return _isar.memoDatas
+        .filter()
+        .categoryIdEqualTo(categoryDataId)
+        .sortByIndex()
+        .findAll();
   }
 
   Future putMemo(MemoData memoData) {
@@ -128,31 +132,44 @@ class Dao {
 
   Future insertMemo(int categoryId, MemoData memoData, int insertIndex) async {
     var categoryMemos = await categoryMemoFromId(categoryId);
-    if (categoryMemos.isEmpty) {
-      return;
-    }
+    var fromCategoryId = memoData.categoryId;
+    var sameCategory = fromCategoryId == categoryId;
 
-    var sameCategory = memoData.categoryId == categoryId;
-
-    if (!sameCategory) {
-      var sample = categoryMemos.first;
-      memoData.boardId = sample.boardId;
-      memoData.categoryId = sample.categoryId;
+    if (sameCategory) {
+      categoryMemos.removeWhere((e) => e.id == memoData.id);
+    } else {
+      memoData.categoryId = categoryId;
     }
 
     var index = categoryMemos.indexWhere((e) => e.index == insertIndex);
     if (index < 0) {
-      index = 0;
-    }
-    if (sameCategory) {
-      categoryMemos.removeWhere((e) => e.id == memoData.id);
+      categoryMemos.add(memoData);
+    } else {
+      categoryMemos.insert(index, memoData);
     }
 
-    categoryMemos.insert(index, memoData);
-    categoryMemos.asMap().forEach((key, value) {
+    categoryMemos.whereNotNull().toList().asMap().forEach((key, value) {
       value.index = key;
     });
-    await putAllMemo(categoryMemos);
+
+    return _isar.writeTxn((isar) async {
+      await isar.memoDatas.putAll(categoryMemos);
+
+      if (!sameCategory && fromCategoryId != null) {
+        var fromCategoryMemos = await categoryMemoFromId(fromCategoryId);
+        fromCategoryMemos.removeWhere((e) => e.id == memoData.id);
+        if (fromCategoryMemos.isNotEmpty) {
+          fromCategoryMemos
+              .whereNotNull()
+              .toList()
+              .asMap()
+              .forEach((key, value) {
+            value.index = key;
+          });
+          await isar.memoDatas.putAll(fromCategoryMemos);
+        }
+      }
+    });
   }
 
   Future deleteMemo(MemoData memoData) {
