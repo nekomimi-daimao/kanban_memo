@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v3
-    
+      with:
+        token: ${{ secrets.ACTIONS_GITHUB_PAT }}
     - name: Flutter
       uses: subosito/flutter-action@v2
       with:
