@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/provider/config_provider.dart';
@@ -17,6 +17,7 @@ void main() async {
 
 final FutureProvider initialProvider = FutureProvider((ref) async {
   await Dao().initialize();
+  final packageInfo = ref.read(ConfigProvider.packageInfoProvider).value;
   var config = ref.read(ConfigProvider.restoreConfigProvider).value;
   if (config != null) {
     ref.read(ConfigProvider.configProvider.notifier).state = config;

@@ -268,14 +268,14 @@ class MainPage extends HookConsumerWidget {
     );
     drawerItem.addAll(exportTile.divider());
 
-    var about = const AboutListTile(
-      icon: Icon(Icons.info_outline_rounded),
-      // applicationVersion: '1.0.0',
+    final packageInfo = ref.read(ConfigProvider.packageInfoProvider).value;
+    final about = AboutListTile(
+      icon: const Icon(Icons.info_outline_rounded),
+      applicationName: packageInfo?.appName,
+      applicationVersion: packageInfo?.version,
       // applicationIcon: Icon(Icons.wb_incandescent),
       applicationLegalese: '2022 NekomimiDaimao',
-      // aboutBoxChildren: [Text("data")],
     );
-
     drawerItem.add(about);
 
     return drawerItem;
