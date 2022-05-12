@@ -79,10 +79,23 @@ class MemoCard extends HookConsumerWidget {
               Text(
                 memoData.title,
                 maxLines: 1,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  height: 1,
+                  letterSpacing: 0,
+                ),
+              ),
+              const Divider(
+                thickness: 2,
+                height: 20,
               ),
               Text(
                 memoData.memo,
                 maxLines: null,
+                style: const TextStyle(
+                  height: 1,
+                  letterSpacing: 0,
+                ),
               ),
             ],
           ),
@@ -101,7 +114,7 @@ class MemoCard extends HookConsumerWidget {
         // Nothing
         break;
       case EditResultType.submit:
-        Dao().putMemo(memoData);
+        // Nothing
         break;
       case EditResultType.delete:
         Dao().deleteMemo(memoData);

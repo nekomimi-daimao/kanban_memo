@@ -52,6 +52,10 @@ class EditMemoDialog extends HookConsumerWidget {
               controller: titleController,
               maxLines: 1,
               decoration: _decoration("Title"),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                height: 1,
+              ),
               onChanged: (v) {
                 if (v != memoData.title) {
                   ref.read(memoDataChangedProvider.notifier).state = true;
@@ -67,6 +71,9 @@ class EditMemoDialog extends HookConsumerWidget {
                 maxLines: null,
                 minLines: 10,
                 decoration: _decoration("Memo"),
+                style: const TextStyle(
+                  height: 1,
+                ),
                 keyboardType: TextInputType.multiline,
                 onChanged: (v) {
                   if (v != memoData.memo) {
@@ -120,6 +127,18 @@ class EditMemoDialog extends HookConsumerWidget {
                   Dao().putMemo(memoData);
                 },
           child: const Text("Save"),
+        ),
+        ElevatedButton(
+          onPressed: !ref.watch(memoDataChangedProvider)
+              ? null
+              : () async {
+                  memoData.title = titleController.text;
+                  memoData.memo = memoController.text;
+                  ref.read(memoDataChangedProvider.notifier).state = false;
+                  await Dao().putMemo(memoData);
+                  Navigator.of(context).pop(EditResultType.submit);
+                },
+          child: const Text("Submit"),
         ),
       ],
     );

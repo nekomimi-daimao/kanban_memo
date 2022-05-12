@@ -178,8 +178,11 @@ class MainPage extends HookConsumerWidget {
 
     var sliderColumn = Column(
       children: [
-        const ListTile(
-          title: Text("CategoryWidth"),
+        ListTile(
+          title: const Text(
+            "CategoryWidth",
+            textAlign: TextAlign.center,
+          ).center(),
         ),
         categoryWidthSlider,
       ],
@@ -213,8 +216,11 @@ class MainPage extends HookConsumerWidget {
 
     var themeColumn = Column(
       children: [
-        const ListTile(
-          title: Text("Theme"),
+        ListTile(
+          title: const Text(
+            "Theme",
+            textAlign: TextAlign.center,
+          ).center(),
         ),
         themeDropDown,
       ],
@@ -222,10 +228,11 @@ class MainPage extends HookConsumerWidget {
 
     drawerItem.addAll(themeColumn.divider());
 
-    var jsonTile = const ListTile(
-      title: Text(
+    var jsonTile = ListTile(
+      title: const Text(
         "Import / Export",
-      ),
+        textAlign: TextAlign.center,
+      ).center(),
     );
     drawerItem.add(jsonTile);
 
