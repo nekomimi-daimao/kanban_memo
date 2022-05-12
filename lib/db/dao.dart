@@ -240,16 +240,18 @@ class Dao {
     });
   }
 
-  Future<String> exportJson() async {
-    Map<String, IsarCollection> collections = {
+  Map<String, IsarCollection> dbCollections() {
+    return {
       _isar.memoDatas.name: _isar.memoDatas,
       _isar.categoryDatas.name: _isar.categoryDatas,
       _isar.boardDatas.name: _isar.boardDatas,
       _isar.categoryDatas.name: _isar.categoryDatas,
     };
+  }
 
+  Future<String> exportJson() async {
+    var collections = dbCollections();
     Map<String, List<dynamic>> toJsonMap = {};
-
     for (var k in collections.keys) {
       var collection = collections[k];
       if (collection == null) {
@@ -257,13 +259,22 @@ class Dao {
       }
       toJsonMap[k] = await collection.where().exportJson();
     }
-
     return jsonEncode(toJsonMap);
   }
 
-  void importJson() {
-
-
+  Future importJson(Map<String, dynamic> json) async {
+    var collections = dbCollections();
+    return _isar.writeTxn((isar) async {
+      for (var k in json.keys) {
+        var c = collections[k];
+        if (c == null) {
+          continue;
+        }
+        var v =
+            json[k].cast<Map<String, dynamic>>() as List<Map<String, dynamic>>;
+        await c.importJson(v);
+      }
+    });
   }
 
   Future putConfig(Config config) async {

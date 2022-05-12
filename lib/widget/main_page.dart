@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kanban_memo/db/dao.dart';
@@ -226,17 +229,44 @@ class MainPage extends HookConsumerWidget {
     );
     drawerItem.add(jsonTile);
 
+    var importTile = ListTile(
+      leading: const Icon(Icons.file_upload_rounded),
+      title: const Text(
+        "Import",
+      ),
+      onTap: () async {
+        var file = await FilePicker.platform.pickFiles(
+          dialogTitle: "Import Json",
+          type: FileType.custom,
+          allowedExtensions: ["json"],
+          withData: true,
+        );
+
+        if (file == null || file.files.isEmpty) {
+          return;
+        }
+        var bytes = file.files.first.bytes;
+        if (bytes == null) {
+          return;
+        }
+        var json = utf8.decode(bytes);
+        Map<String, dynamic> decoded = jsonDecode(json);
+        await Dao().importJson(decoded);
+      },
+    );
+    drawerItem.add(importTile);
+
     var exportTile = ListTile(
+      leading: const Icon(Icons.file_download_rounded),
       title: const Text(
         "Export",
-        textAlign: TextAlign.center,
       ),
       onTap: () async {
         var json = await Dao().exportJson();
         DbToJson.export(json);
       },
     );
-    drawerItem.add(exportTile);
+    drawerItem.addAll(exportTile.divider());
 
     var about = const AboutListTile(
       icon: Icon(Icons.info_outline_rounded),
