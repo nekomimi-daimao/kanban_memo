@@ -21,6 +21,11 @@ class CategoryData {
   }
 
   @override
+  String toString() {
+    return 'CategoryData{id: $id, boardId: $boardId, category: $category, created: $created}';
+  }
+
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is CategoryData &&

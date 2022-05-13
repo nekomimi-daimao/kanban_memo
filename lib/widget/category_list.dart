@@ -18,12 +18,14 @@ class CategoryList extends HookConsumerWidget {
       {Key? key,
       required this.boardData,
       required this.categoryData,
-      required this.memoData})
+      required this.memoData,
+      required this.isOdd})
       : super(key: key);
 
   final BoardData boardData;
   final CategoryData categoryData;
   final List<MemoData> memoData;
+  final bool isOdd;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,8 +66,9 @@ class CategoryList extends HookConsumerWidget {
     var categoryListWith = ref.watch(ConfigProvider.configProvider
         .select((value) => value.categoryListWidth));
 
-    return SizedBox(
+    return Container(
       width: categoryListWith,
+      color: Theme.of(context).backgroundColor.withOpacity(isOdd ? 0.15 : 0.05),
       child: Column(
         children: [
           const SizedBox(

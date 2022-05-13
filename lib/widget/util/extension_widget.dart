@@ -43,6 +43,12 @@ extension WidgetExtension on Widget {
       maintainAnimation: true,
     );
   }
+
+  Scaffold emptyScaffold() {
+    return Scaffold(
+      body: this,
+    );
+  }
 }
 
 extension WidgetsExtension on List<Widget> {

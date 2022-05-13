@@ -45,7 +45,6 @@ class KanbanBoard extends HookConsumerWidget {
         child: IconButton(
           icon: const Icon(Icons.add_box_rounded),
           iconSize: 40,
-          color: Theme.of(context).primaryColor,
           onPressed: () async {
             var builder = EditTextDialog.builder("Add Category");
             builder.submit = "Create";
@@ -62,11 +61,18 @@ class KanbanBoard extends HookConsumerWidget {
 
     List<Widget> list = [];
     if (!boardData.isEmpty()) {
-      map.forEach((key, value) {
-        var categoryList = CategoryList(
-            boardData: boardData, categoryData: key, memoData: value);
+      for (int index = 0; index < map.keys.length; index += 1) {
+        final key = map.keys.elementAt(index);
+        final value = map.values.elementAt(index);
+        final categoryList = CategoryList(
+          boardData: boardData,
+          categoryData: key,
+          memoData: value,
+          isOdd: index.isOdd,
+        );
         list.add(categoryList);
-      });
+      }
+
       list.add(addIcon);
     }
     return list;
