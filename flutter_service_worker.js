@@ -8,7 +8,7 @@ const RESOURCES = {
 "canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
 "canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"main.dart.js": "8d11c8e4f2670918e02120be62e4179d",
+"main.dart.js": "4737d5c32efc769587955097483317ba",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
 "assets/AssetManifest.json": "99914b932bd37a50b983c5e7c90ae93b",
@@ -20,8 +20,8 @@ const RESOURCES = {
 "flutter.js": "0816e65a103ba8ba51b174eeeeb2cb67",
 "version.json": "04d1c95128b57243d44463b4f4502d48",
 "manifest.json": "827db2a99e720960da527be1f89a4244",
-"index.html": "ba42008d8b575c54e1a78ffd4ae2fbca",
-"/": "ba42008d8b575c54e1a78ffd4ae2fbca"
+"index.html": "65870f9af5e6ae974599b3ae8b396612",
+"/": "65870f9af5e6ae974599b3ae8b396612"
 };
 
 // The application shell files that are downloaded before a service worker can
