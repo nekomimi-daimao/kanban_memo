@@ -1,66 +1,146 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+    <!--
+        If you are serving your web app in a path other than the root, change the
+        href value below to reflect the base path you are serving from.
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+        The path provided below has to start and end with a slash "/" in order for
+        it to work correctly.
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+        For more details:
+        * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
 
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
-
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="memos like kanban.">
-
-  <!-- share -->
-  <meta name="twitter:card" content="summary">
-  <meta name="Twitter:site" content="@CatEarEvilKing">
-  <meta property="og:title" content="kanban_memo">
-  <meta property="og:description" content="memos like kanban.">
-  <meta property="og:image" content="icons/Icon-192.png">
-  <meta property="og:url" content="https://nekomimi-daimao.github.io/kanban_memo/">
-
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="kanban_memo">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>kanban_memo</title>
-  <link rel="manifest" href="manifest.json">
-
-  <script>
+        This is a placeholder for base href that will be replaced by the value of
+        the `--base-href` argument provided to `flutter build`.
+      -->
+    <base href="$FLUTTER_BASE_HREF">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="memos like kanban.">
+    <!-- share -->
+    <meta name="twitter:card" content="summary">
+    <meta name="Twitter:site" content="@CatEarEvilKing">
+    <meta property="og:title" content="kanban_memo">
+    <meta property="og:description" content="memos like kanban.">
+    <meta property="og:image" content="icons/Icon-192.png">
+    <meta property="og:url" content="https://nekomimi-daimao.github.io/kanban_memo/">
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="kanban_memo">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <title>kanban_memo</title>
+    <link rel="manifest" href="manifest.json">
+    <script>
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = null;
   </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
+    <!-- This script adds the flutter initialization JS code -->
+    <script src="flutter.js" defer></script>
 </head>
 <body>
-  <script>
-    window.addEventListener('load', function(ev) {
+<script>
+    window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         }
-      }).then(function(engineInitializer) {
+      }).then(function (engineInitializer) {
         return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
+      }).then(function (appRunner) {
+        var loading = document.querySelector('#loading');
+        loading.remove();
         return appRunner.runApp();
       });
     });
-  </script>
+</script>
+<div id="loading" class="animate-flicker">
+    <style>
+      body {
+        inset: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        position: fixed;
+        background-color: #455a64;
+      }
+
+      @keyframes flickerAnimation {
+        0% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @-o-keyframes flickerAnimation {
+        0% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @-moz-keyframes flickerAnimation {
+        0% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @-webkit-keyframes flickerAnimation {
+        0% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .animate-flicker {
+        -webkit-animation: flickerAnimation 2s infinite;
+        -moz-animation: flickerAnimation 2s infinite;
+        -o-animation: flickerAnimation 2s infinite;
+        animation: flickerAnimation 2s infinite;
+      }
+    </style>
+    <img src="icons/Icon-192.png" alt="Loading indicator..." style="
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 100px;
+    height: 100px;" />
+</div>
 </body>
 </html>
