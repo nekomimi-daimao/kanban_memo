@@ -272,7 +272,7 @@ class Dao {
         }
         var v =
             json[k].cast<Map<String, dynamic>>() as List<Map<String, dynamic>>;
-        await c.importJson(v);
+        await c.importJson(v, replaceOnConflict: true);
       }
     });
   }

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kanban_memo/db/dao.dart';
@@ -280,8 +282,30 @@ class MainPage extends HookConsumerWidget {
       icon: const Icon(Icons.info_outline_rounded),
       applicationName: packageInfo?.appName,
       applicationVersion: packageInfo?.version,
-      // applicationIcon: Icon(Icons.wb_incandescent),
+      applicationIcon: SvgPicture.asset(
+        "assets/dashboard.svg",
+        width: 40,
+        height: 40,
+      ),
       applicationLegalese: '2022 NekomimiDaimao',
+      aboutBoxChildren: [
+        const SizedBox(
+          height: 10,
+        ),
+        TextButton(
+          child: const Text("github"),
+          onPressed: () {
+            launchUrlString("https://github.com/nekomimi-daimao/kanban_memo");
+          },
+        ),
+        TextButton(
+          child: const Text("@CatEarEvilKing"),
+          onPressed: () {
+            // https://twitter.com/CatEarEvilKing
+            launchUrlString("https://twitter.com/CatEarEvilKing");
+          },
+        ),
+      ],
     );
     drawerItem.add(about);
 
