@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg height="512px" viewBox="0 0 512 512" width="512px" fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <path d="M0 0h24v24H0z" fill="none"/>
+  <path d="M 0 284.444 L 227.556 284.444 L 227.556 0 L 0 0 L 0 284.444 Z M 0 512 L 227.556 512 L 227.556 341.333 L 0 341.333 L 0 512 Z M 284.444 512 L 512 512 L 512 227.556 L 284.444 227.556 L 284.444 512 Z M 284.444 0 L 284.444 170.667 L 512 170.667 L 512 0 L 284.444 0 Z" bx:origin="0 0"/>
+  <rect width="227.98" height="286" style="fill: rgb(255, 112, 67);"/>
+  <rect width="227.98" height="286" style="fill: rgb(41, 182, 246);" x="284.029" y="226.482"/>
+  <rect width="227.98" height="172" style="fill: rgb(171, 71, 188);" y="340"/>
+  <rect width="227.98" height="172" style="fill: rgb(255, 238, 88);" x="284"/>
+</svg>

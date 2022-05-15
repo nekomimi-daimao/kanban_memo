@@ -7,21 +7,22 @@ const RESOURCES = {
 "canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
 "canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
 "canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
-"favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"main.dart.js": "4737d5c32efc769587955097483317ba",
+"favicon.png": "3c2161e61d6ef47809fa9ad18bd5316d",
+"main.dart.js": "f6ff6f37c2bb78cd71d44a84822b7857",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
+"assets/assets/dashboard.svg": "fd65876840f07270ce68070089f32122",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
-"assets/AssetManifest.json": "99914b932bd37a50b983c5e7c90ae93b",
-"assets/NOTICES": "015e6f1bb36bb656254833e4fa412dcb",
-"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
-"icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
-"icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
+"assets/AssetManifest.json": "2ac5a09a8608fff1126015218489f883",
+"assets/NOTICES": "0804ede6191693ee3aede1c4c25d9f5f",
+"icons/Icon-512.png": "4eaf19a415cc024506d696b1ffa3a44f",
+"icons/Icon-192.png": "07da1cdb68e213fdcd6b6ded61e42bb8",
+"icons/Icon-maskable-192.png": "e8fd6c47dcce4037e2639e8a8fed52b9",
+"icons/Icon-maskable-512.png": "41b9a3cdae817000bdd0e2cd0053778c",
 "flutter.js": "0816e65a103ba8ba51b174eeeeb2cb67",
 "version.json": "04d1c95128b57243d44463b4f4502d48",
 "manifest.json": "827db2a99e720960da527be1f89a4244",
-"index.html": "65870f9af5e6ae974599b3ae8b396612",
-"/": "65870f9af5e6ae974599b3ae8b396612"
+"index.html": "241d001230e7f4b4756dff5bea99ec9b",
+"/": "241d001230e7f4b4756dff5bea99ec9b"
 };
 
 // The application shell files that are downloaded before a service worker can
