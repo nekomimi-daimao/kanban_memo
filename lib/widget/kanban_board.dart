@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kanban_memo/db/dao.dart';
@@ -11,6 +12,7 @@ import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/provider/board_providers.dart';
 import 'package:kanban_memo/widget/category_list.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
+import 'package:kanban_memo/widget/util/extension_widget.dart';
 
 class KanbanBoard extends HookConsumerWidget {
   final BoardData boardData;
@@ -22,16 +24,41 @@ class KanbanBoard extends HookConsumerWidget {
     final map = ref.watch(BoardProviders.boardMapProvider);
 
     return map.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (err, stack) => Text('Error: $err'),
+        loading: () => const CircularProgressIndicator().center(),
+        error: (err, stack) => Text('Error: $err').center(),
         data: (map) {
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
+          if (map.isNotEmpty) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _buildList(map, context),
+              ),
+            );
+          } else {
+            return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: _buildList(map, context),
-            ),
-          );
+              children: [
+                SvgPicture.asset(
+                  "assets/dashboard.svg",
+                  width: 100,
+                  height: 100,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                  "kanban_board",
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ).center();
+          }
         });
   }
 
