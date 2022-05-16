@@ -75082,7 +75082,8 @@ $2(a,b){var s=null
 return A.ev(A.bX("Error: "+A.d(a),s,s,s,s,s,s),s,s)},
 $S:171}
 A.a4h.prototype={
-$1(a){if(a.a!==0)return A.axY(A.ui(this.a.Zn(a,this.b),B.aD,B.dx,B.aw),B.at)
+$1(a){var s=this.a
+if(s.f.a!==-1)return A.axY(A.ui(s.Zn(a,this.b),B.aD,B.dx,B.aw),B.at)
 else return A.ev(A.iz(A.b([A.ayd("assets/dashboard.svg",100,100),B.lJ,B.Q6],t.p),B.aD,B.dx,B.aw),null,null)},
 $S:508}
 A.a4g.prototype={
