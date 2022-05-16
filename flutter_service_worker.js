@@ -8,7 +8,7 @@ const RESOURCES = {
 "canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
 "canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
 "favicon.png": "3c2161e61d6ef47809fa9ad18bd5316d",
-"main.dart.js": "f6ff6f37c2bb78cd71d44a84822b7857",
+"main.dart.js": "8c8d2b801c0ed76af126004b4c8079cf",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
 "assets/assets/dashboard.svg": "fd65876840f07270ce68070089f32122",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
@@ -21,8 +21,8 @@ const RESOURCES = {
 "flutter.js": "0816e65a103ba8ba51b174eeeeb2cb67",
 "version.json": "04d1c95128b57243d44463b4f4502d48",
 "manifest.json": "827db2a99e720960da527be1f89a4244",
-"index.html": "241d001230e7f4b4756dff5bea99ec9b",
-"/": "241d001230e7f4b4756dff5bea99ec9b"
+"index.html": "efb516829f5903cb6a5fd130186dac2e",
+"/": "efb516829f5903cb6a5fd130186dac2e"
 };
 
 // The application shell files that are downloaded before a service worker can
