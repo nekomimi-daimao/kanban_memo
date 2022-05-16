@@ -8,11 +8,6 @@ class ConfigProvider {
   static final StateProvider<Config> configProvider =
       StateProvider<Config>((ref) => Config.init());
 
-  static final FutureProvider<Config?> restoreConfigProvider =
-      FutureProvider<Config?>((ref) async {
-    return Dao().config();
-  });
-
   static final FutureProvider<PackageInfo?> packageInfoProvider =
       FutureProvider<PackageInfo?>((ref) async {
     return PackageInfo.fromPlatform();

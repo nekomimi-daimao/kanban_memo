@@ -18,7 +18,7 @@ void main() async {
 final FutureProvider initialProvider = FutureProvider((ref) async {
   await Dao().initialize();
   final packageInfo = ref.read(ConfigProvider.packageInfoProvider).value;
-  var config = ref.read(ConfigProvider.restoreConfigProvider).value;
+  var config = await Dao().config();
   if (config != null) {
     ref.read(ConfigProvider.configProvider.notifier).state = config;
   }
