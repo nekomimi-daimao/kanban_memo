@@ -27,7 +27,7 @@ class KanbanBoard extends HookConsumerWidget {
         loading: () => const CircularProgressIndicator().center(),
         error: (err, stack) => Text('Error: $err').center(),
         data: (map) {
-          if (map.isNotEmpty) {
+          if (!boardData.isEmpty()) {
             return SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
