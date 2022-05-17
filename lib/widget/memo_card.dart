@@ -83,6 +83,7 @@ class MemoCard extends HookConsumerWidget {
                   fontWeight: FontWeight.bold,
                   height: 1,
                   letterSpacing: 0,
+                  wordSpacing: 0,
                 ),
               ),
               const Divider(
@@ -95,6 +96,7 @@ class MemoCard extends HookConsumerWidget {
                 style: const TextStyle(
                   height: 1,
                   letterSpacing: 0,
+                  wordSpacing: 0,
                 ),
               ),
             ],

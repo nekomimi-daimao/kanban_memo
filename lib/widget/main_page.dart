@@ -28,7 +28,8 @@ class MainPage extends HookConsumerWidget {
         ref.watch(BoardProviders.boardListProvider);
     return boards.when(
       loading: () => const CircularProgressIndicator().center().emptyScaffold(),
-      error: (err, stack) => Text('Error: $err').emptyScaffold(),
+      error: (err, stack) =>
+          Text("$err \n Chrome plz!").center().emptyScaffold(),
       data: (boards) {
         var drawerItem = _createMemoDrawerItem(ref, context, boards);
         return Scaffold(

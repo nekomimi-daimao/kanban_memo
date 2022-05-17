@@ -32,8 +32,7 @@ class MyApp extends HookConsumerWidget {
     return initial.when(
       loading: () => const CircularProgressIndicator().center(),
       error: (err, stack) {
-        ref.refresh(initialProvider);
-        return const CircularProgressIndicator().center();
+        return Text("$err \n Chrome plz!").center();
       },
       data: (config) {
         var themeModeValue = ref.watch(

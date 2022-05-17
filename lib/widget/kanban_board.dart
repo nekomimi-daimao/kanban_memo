@@ -25,7 +25,7 @@ class KanbanBoard extends HookConsumerWidget {
 
     return map.when(
         loading: () => const CircularProgressIndicator().center(),
-        error: (err, stack) => Text('Error: $err').center(),
+        error: (err, stack) => Text("$err \n Chrome plz!").center(),
         data: (map) {
           if (!boardData.isEmpty()) {
             return SingleChildScrollView(
