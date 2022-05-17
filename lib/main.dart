@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/provider/config_provider.dart';
@@ -43,6 +42,7 @@ class MyApp extends HookConsumerWidget {
           textTheme: kIsWeb
               ? GoogleFonts.sawarabiGothicTextTheme(Theme.of(context).textTheme)
               : null,
+          primarySwatch: Colors.orange,
         );
         return MaterialApp(
           title: "kanban memo",

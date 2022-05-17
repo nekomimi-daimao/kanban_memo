@@ -1,7 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:kanban_memo/db/dao.dart';
 import 'package:kanban_memo/model/config/config_data.dart';
 
 class ConfigProvider {
