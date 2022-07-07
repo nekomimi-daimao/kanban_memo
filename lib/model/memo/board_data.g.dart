@@ -15,9 +15,9 @@ extension GetBoardDataCollection on Isar {
 const BoardDataSchema = CollectionSchema(
   name: 'BoardData',
   schema:
-      '{"name":"BoardData","idName":"id","properties":[{"name":"created","type":"Long"},{"name":"hashCode","type":"Long"},{"name":"title","type":"String"}],"indexes":[],"links":[]}',
+      '{"name":"BoardData","idName":"id","properties":[{"name":"hashCode","type":"Long"},{"name":"index","type":"Long"},{"name":"title","type":"String"}],"indexes":[],"links":[]}',
   idName: 'id',
-  propertyIds: {'created': 0, 'hashCode': 1, 'title': 2},
+  propertyIds: {'hashCode': 0, 'index': 1, 'title': 2},
   listProperties: {},
   indexIds: {},
   indexValueTypes: {},
@@ -60,10 +60,10 @@ void _boardDataSerializeNative(
     List<int> offsets,
     AdapterAlloc alloc) {
   var dynamicSize = 0;
-  final value0 = object.created;
-  final _created = value0;
-  final value1 = object.hashCode;
-  final _hashCode = value1;
+  final value0 = object.hashCode;
+  final _hashCode = value0;
+  final value1 = object.index;
+  final _index = value1;
   final value2 = object.title;
   final _title = IsarBinaryWriter.utf8Encoder.convert(value2);
   dynamicSize += (_title.length) as int;
@@ -73,16 +73,16 @@ void _boardDataSerializeNative(
   rawObj.buffer_length = size;
   final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
   final writer = IsarBinaryWriter(buffer, staticSize);
-  writer.writeDateTime(offsets[0], _created);
-  writer.writeLong(offsets[1], _hashCode);
+  writer.writeLong(offsets[0], _hashCode);
+  writer.writeLong(offsets[1], _index);
   writer.writeBytes(offsets[2], _title);
 }
 
 BoardData _boardDataDeserializeNative(IsarCollection<BoardData> collection,
     int id, IsarBinaryReader reader, List<int> offsets) {
   final object = BoardData();
-  object.created = reader.readDateTime(offsets[0]);
   object.id = id;
+  object.index = reader.readLong(offsets[1]);
   object.title = reader.readString(offsets[2]);
   return object;
 }
@@ -93,7 +93,7 @@ P _boardDataDeserializePropNative<P>(
     case -1:
       return id as P;
     case 0:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
@@ -106,10 +106,9 @@ P _boardDataDeserializePropNative<P>(
 dynamic _boardDataSerializeWeb(
     IsarCollection<BoardData> collection, BoardData object) {
   final jsObj = IsarNative.newJsObject();
-  IsarNative.jsObjectSet(
-      jsObj, 'created', object.created.toUtc().millisecondsSinceEpoch);
   IsarNative.jsObjectSet(jsObj, 'hashCode', object.hashCode);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(jsObj, 'index', object.index);
   IsarNative.jsObjectSet(jsObj, 'title', object.title);
   return jsObj;
 }
@@ -117,31 +116,23 @@ dynamic _boardDataSerializeWeb(
 BoardData _boardDataDeserializeWeb(
     IsarCollection<BoardData> collection, dynamic jsObj) {
   final object = BoardData();
-  object.created = IsarNative.jsObjectGet(jsObj, 'created') != null
-      ? DateTime.fromMillisecondsSinceEpoch(
-              IsarNative.jsObjectGet(jsObj, 'created'),
-              isUtc: true)
-          .toLocal()
-      : DateTime.fromMillisecondsSinceEpoch(0);
   object.id = IsarNative.jsObjectGet(jsObj, 'id');
+  object.index =
+      IsarNative.jsObjectGet(jsObj, 'index') ?? double.negativeInfinity;
   object.title = IsarNative.jsObjectGet(jsObj, 'title') ?? '';
   return object;
 }
 
 P _boardDataDeserializePropWeb<P>(Object jsObj, String propertyName) {
   switch (propertyName) {
-    case 'created':
-      return (IsarNative.jsObjectGet(jsObj, 'created') != null
-          ? DateTime.fromMillisecondsSinceEpoch(
-                  IsarNative.jsObjectGet(jsObj, 'created'),
-                  isUtc: true)
-              .toLocal()
-          : DateTime.fromMillisecondsSinceEpoch(0)) as P;
     case 'hashCode':
       return (IsarNative.jsObjectGet(jsObj, 'hashCode') ??
           double.negativeInfinity) as P;
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
+    case 'index':
+      return (IsarNative.jsObjectGet(jsObj, 'index') ?? double.negativeInfinity)
+          as P;
     case 'title':
       return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
     default:
@@ -216,54 +207,6 @@ extension BoardDataQueryWhere
 
 extension BoardDataQueryFilter
     on QueryBuilder<BoardData, BoardData, QFilterCondition> {
-  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> createdEqualTo(
-      DateTime value) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'created',
-      value: value,
-    ));
-  }
-
-  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> createdGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'created',
-      value: value,
-    ));
-  }
-
-  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> createdLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'created',
-      value: value,
-    ));
-  }
-
-  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> createdBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'created',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-    ));
-  }
-
   QueryBuilder<BoardData, BoardData, QAfterFilterCondition> hashCodeEqualTo(
       int value) {
     return addFilterConditionInternal(FilterCondition(
@@ -361,6 +304,54 @@ extension BoardDataQueryFilter
   }) {
     return addFilterConditionInternal(FilterCondition.between(
       property: 'id',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> indexEqualTo(
+      int value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'index',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> indexGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'index',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> indexLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'index',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterFilterCondition> indexBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'index',
       lower: lower,
       includeLower: includeLower,
       upper: upper,
@@ -477,14 +468,6 @@ extension BoardDataQueryLinks
 
 extension BoardDataQueryWhereSortBy
     on QueryBuilder<BoardData, BoardData, QSortBy> {
-  QueryBuilder<BoardData, BoardData, QAfterSortBy> sortByCreated() {
-    return addSortByInternal('created', Sort.asc);
-  }
-
-  QueryBuilder<BoardData, BoardData, QAfterSortBy> sortByCreatedDesc() {
-    return addSortByInternal('created', Sort.desc);
-  }
-
   QueryBuilder<BoardData, BoardData, QAfterSortBy> sortByHashCode() {
     return addSortByInternal('hashCode', Sort.asc);
   }
@@ -501,6 +484,14 @@ extension BoardDataQueryWhereSortBy
     return addSortByInternal('id', Sort.desc);
   }
 
+  QueryBuilder<BoardData, BoardData, QAfterSortBy> sortByIndex() {
+    return addSortByInternal('index', Sort.asc);
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterSortBy> sortByIndexDesc() {
+    return addSortByInternal('index', Sort.desc);
+  }
+
   QueryBuilder<BoardData, BoardData, QAfterSortBy> sortByTitle() {
     return addSortByInternal('title', Sort.asc);
   }
@@ -512,14 +503,6 @@ extension BoardDataQueryWhereSortBy
 
 extension BoardDataQueryWhereSortThenBy
     on QueryBuilder<BoardData, BoardData, QSortThenBy> {
-  QueryBuilder<BoardData, BoardData, QAfterSortBy> thenByCreated() {
-    return addSortByInternal('created', Sort.asc);
-  }
-
-  QueryBuilder<BoardData, BoardData, QAfterSortBy> thenByCreatedDesc() {
-    return addSortByInternal('created', Sort.desc);
-  }
-
   QueryBuilder<BoardData, BoardData, QAfterSortBy> thenByHashCode() {
     return addSortByInternal('hashCode', Sort.asc);
   }
@@ -536,6 +519,14 @@ extension BoardDataQueryWhereSortThenBy
     return addSortByInternal('id', Sort.desc);
   }
 
+  QueryBuilder<BoardData, BoardData, QAfterSortBy> thenByIndex() {
+    return addSortByInternal('index', Sort.asc);
+  }
+
+  QueryBuilder<BoardData, BoardData, QAfterSortBy> thenByIndexDesc() {
+    return addSortByInternal('index', Sort.desc);
+  }
+
   QueryBuilder<BoardData, BoardData, QAfterSortBy> thenByTitle() {
     return addSortByInternal('title', Sort.asc);
   }
@@ -547,16 +538,16 @@ extension BoardDataQueryWhereSortThenBy
 
 extension BoardDataQueryWhereDistinct
     on QueryBuilder<BoardData, BoardData, QDistinct> {
-  QueryBuilder<BoardData, BoardData, QDistinct> distinctByCreated() {
-    return addDistinctByInternal('created');
-  }
-
   QueryBuilder<BoardData, BoardData, QDistinct> distinctByHashCode() {
     return addDistinctByInternal('hashCode');
   }
 
   QueryBuilder<BoardData, BoardData, QDistinct> distinctById() {
     return addDistinctByInternal('id');
+  }
+
+  QueryBuilder<BoardData, BoardData, QDistinct> distinctByIndex() {
+    return addDistinctByInternal('index');
   }
 
   QueryBuilder<BoardData, BoardData, QDistinct> distinctByTitle(
@@ -567,16 +558,16 @@ extension BoardDataQueryWhereDistinct
 
 extension BoardDataQueryProperty
     on QueryBuilder<BoardData, BoardData, QQueryProperty> {
-  QueryBuilder<BoardData, DateTime, QQueryOperations> createdProperty() {
-    return addPropertyNameInternal('created');
-  }
-
   QueryBuilder<BoardData, int, QQueryOperations> hashCodeProperty() {
     return addPropertyNameInternal('hashCode');
   }
 
   QueryBuilder<BoardData, int?, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
+  }
+
+  QueryBuilder<BoardData, int, QQueryOperations> indexProperty() {
+    return addPropertyNameInternal('index');
   }
 
   QueryBuilder<BoardData, String, QQueryOperations> titleProperty() {

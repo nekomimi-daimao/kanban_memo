@@ -15,9 +15,9 @@ extension GetCategoryDataCollection on Isar {
 const CategoryDataSchema = CollectionSchema(
   name: 'CategoryData',
   schema:
-      '{"name":"CategoryData","idName":"id","properties":[{"name":"boardId","type":"Long"},{"name":"category","type":"String"},{"name":"created","type":"Long"},{"name":"hashCode","type":"Long"}],"indexes":[],"links":[]}',
+      '{"name":"CategoryData","idName":"id","properties":[{"name":"boardId","type":"Long"},{"name":"category","type":"String"},{"name":"hashCode","type":"Long"},{"name":"index","type":"Long"}],"indexes":[],"links":[]}',
   idName: 'id',
-  propertyIds: {'boardId': 0, 'category': 1, 'created': 2, 'hashCode': 3},
+  propertyIds: {'boardId': 0, 'category': 1, 'hashCode': 2, 'index': 3},
   listProperties: {},
   indexIds: {},
   indexValueTypes: {},
@@ -65,10 +65,10 @@ void _categoryDataSerializeNative(
   final value1 = object.category;
   final _category = IsarBinaryWriter.utf8Encoder.convert(value1);
   dynamicSize += (_category.length) as int;
-  final value2 = object.created;
-  final _created = value2;
-  final value3 = object.hashCode;
-  final _hashCode = value3;
+  final value2 = object.hashCode;
+  final _hashCode = value2;
+  final value3 = object.index;
+  final _index = value3;
   final size = staticSize + dynamicSize;
 
   rawObj.buffer = alloc(size);
@@ -77,8 +77,8 @@ void _categoryDataSerializeNative(
   final writer = IsarBinaryWriter(buffer, staticSize);
   writer.writeLong(offsets[0], _boardId);
   writer.writeBytes(offsets[1], _category);
-  writer.writeDateTime(offsets[2], _created);
-  writer.writeLong(offsets[3], _hashCode);
+  writer.writeLong(offsets[2], _hashCode);
+  writer.writeLong(offsets[3], _index);
 }
 
 CategoryData _categoryDataDeserializeNative(
@@ -89,8 +89,8 @@ CategoryData _categoryDataDeserializeNative(
   final object = CategoryData();
   object.boardId = reader.readLongOrNull(offsets[0]);
   object.category = reader.readString(offsets[1]);
-  object.created = reader.readDateTime(offsets[2]);
   object.id = id;
+  object.index = reader.readLong(offsets[3]);
   return object;
 }
 
@@ -104,7 +104,7 @@ P _categoryDataDeserializePropNative<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
       return (reader.readLong(offset)) as P;
     default:
@@ -117,10 +117,9 @@ dynamic _categoryDataSerializeWeb(
   final jsObj = IsarNative.newJsObject();
   IsarNative.jsObjectSet(jsObj, 'boardId', object.boardId);
   IsarNative.jsObjectSet(jsObj, 'category', object.category);
-  IsarNative.jsObjectSet(
-      jsObj, 'created', object.created.toUtc().millisecondsSinceEpoch);
   IsarNative.jsObjectSet(jsObj, 'hashCode', object.hashCode);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(jsObj, 'index', object.index);
   return jsObj;
 }
 
@@ -129,13 +128,9 @@ CategoryData _categoryDataDeserializeWeb(
   final object = CategoryData();
   object.boardId = IsarNative.jsObjectGet(jsObj, 'boardId');
   object.category = IsarNative.jsObjectGet(jsObj, 'category') ?? '';
-  object.created = IsarNative.jsObjectGet(jsObj, 'created') != null
-      ? DateTime.fromMillisecondsSinceEpoch(
-              IsarNative.jsObjectGet(jsObj, 'created'),
-              isUtc: true)
-          .toLocal()
-      : DateTime.fromMillisecondsSinceEpoch(0);
   object.id = IsarNative.jsObjectGet(jsObj, 'id');
+  object.index =
+      IsarNative.jsObjectGet(jsObj, 'index') ?? double.negativeInfinity;
   return object;
 }
 
@@ -145,18 +140,14 @@ P _categoryDataDeserializePropWeb<P>(Object jsObj, String propertyName) {
       return (IsarNative.jsObjectGet(jsObj, 'boardId')) as P;
     case 'category':
       return (IsarNative.jsObjectGet(jsObj, 'category') ?? '') as P;
-    case 'created':
-      return (IsarNative.jsObjectGet(jsObj, 'created') != null
-          ? DateTime.fromMillisecondsSinceEpoch(
-                  IsarNative.jsObjectGet(jsObj, 'created'),
-                  isUtc: true)
-              .toLocal()
-          : DateTime.fromMillisecondsSinceEpoch(0)) as P;
     case 'hashCode':
       return (IsarNative.jsObjectGet(jsObj, 'hashCode') ??
           double.negativeInfinity) as P;
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
+    case 'index':
+      return (IsarNative.jsObjectGet(jsObj, 'index') ?? double.negativeInfinity)
+          as P;
     default:
       throw 'Illegal propertyName';
   }
@@ -401,57 +392,6 @@ extension CategoryDataQueryFilter
   }
 
   QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition>
-      createdEqualTo(DateTime value) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'created',
-      value: value,
-    ));
-  }
-
-  QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition>
-      createdGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'created',
-      value: value,
-    ));
-  }
-
-  QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition>
-      createdLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'created',
-      value: value,
-    ));
-  }
-
-  QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition>
-      createdBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'created',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-    ));
-  }
-
-  QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition>
       hashCodeEqualTo(int value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
@@ -557,6 +497,55 @@ extension CategoryDataQueryFilter
       includeUpper: includeUpper,
     ));
   }
+
+  QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition> indexEqualTo(
+      int value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'index',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition>
+      indexGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'index',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition> indexLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'index',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<CategoryData, CategoryData, QAfterFilterCondition> indexBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'index',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+    ));
+  }
 }
 
 extension CategoryDataQueryLinks
@@ -580,14 +569,6 @@ extension CategoryDataQueryWhereSortBy
     return addSortByInternal('category', Sort.desc);
   }
 
-  QueryBuilder<CategoryData, CategoryData, QAfterSortBy> sortByCreated() {
-    return addSortByInternal('created', Sort.asc);
-  }
-
-  QueryBuilder<CategoryData, CategoryData, QAfterSortBy> sortByCreatedDesc() {
-    return addSortByInternal('created', Sort.desc);
-  }
-
   QueryBuilder<CategoryData, CategoryData, QAfterSortBy> sortByHashCode() {
     return addSortByInternal('hashCode', Sort.asc);
   }
@@ -602,6 +583,14 @@ extension CategoryDataQueryWhereSortBy
 
   QueryBuilder<CategoryData, CategoryData, QAfterSortBy> sortByIdDesc() {
     return addSortByInternal('id', Sort.desc);
+  }
+
+  QueryBuilder<CategoryData, CategoryData, QAfterSortBy> sortByIndex() {
+    return addSortByInternal('index', Sort.asc);
+  }
+
+  QueryBuilder<CategoryData, CategoryData, QAfterSortBy> sortByIndexDesc() {
+    return addSortByInternal('index', Sort.desc);
   }
 }
 
@@ -623,14 +612,6 @@ extension CategoryDataQueryWhereSortThenBy
     return addSortByInternal('category', Sort.desc);
   }
 
-  QueryBuilder<CategoryData, CategoryData, QAfterSortBy> thenByCreated() {
-    return addSortByInternal('created', Sort.asc);
-  }
-
-  QueryBuilder<CategoryData, CategoryData, QAfterSortBy> thenByCreatedDesc() {
-    return addSortByInternal('created', Sort.desc);
-  }
-
   QueryBuilder<CategoryData, CategoryData, QAfterSortBy> thenByHashCode() {
     return addSortByInternal('hashCode', Sort.asc);
   }
@@ -646,6 +627,14 @@ extension CategoryDataQueryWhereSortThenBy
   QueryBuilder<CategoryData, CategoryData, QAfterSortBy> thenByIdDesc() {
     return addSortByInternal('id', Sort.desc);
   }
+
+  QueryBuilder<CategoryData, CategoryData, QAfterSortBy> thenByIndex() {
+    return addSortByInternal('index', Sort.asc);
+  }
+
+  QueryBuilder<CategoryData, CategoryData, QAfterSortBy> thenByIndexDesc() {
+    return addSortByInternal('index', Sort.desc);
+  }
 }
 
 extension CategoryDataQueryWhereDistinct
@@ -659,16 +648,16 @@ extension CategoryDataQueryWhereDistinct
     return addDistinctByInternal('category', caseSensitive: caseSensitive);
   }
 
-  QueryBuilder<CategoryData, CategoryData, QDistinct> distinctByCreated() {
-    return addDistinctByInternal('created');
-  }
-
   QueryBuilder<CategoryData, CategoryData, QDistinct> distinctByHashCode() {
     return addDistinctByInternal('hashCode');
   }
 
   QueryBuilder<CategoryData, CategoryData, QDistinct> distinctById() {
     return addDistinctByInternal('id');
+  }
+
+  QueryBuilder<CategoryData, CategoryData, QDistinct> distinctByIndex() {
+    return addDistinctByInternal('index');
   }
 }
 
@@ -682,15 +671,15 @@ extension CategoryDataQueryProperty
     return addPropertyNameInternal('category');
   }
 
-  QueryBuilder<CategoryData, DateTime, QQueryOperations> createdProperty() {
-    return addPropertyNameInternal('created');
-  }
-
   QueryBuilder<CategoryData, int, QQueryOperations> hashCodeProperty() {
     return addPropertyNameInternal('hashCode');
   }
 
   QueryBuilder<CategoryData, int?, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
+  }
+
+  QueryBuilder<CategoryData, int, QQueryOperations> indexProperty() {
+    return addPropertyNameInternal('index');
   }
 }

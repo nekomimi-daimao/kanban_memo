@@ -61,7 +61,7 @@ class Dao {
   }
 
   Future<List<BoardData>> allBoard() {
-    return _isar.boardDatas.where().sortByCreated().findAll();
+    return _isar.boardDatas.where().sortByIndex().findAll();
   }
 
   Future<LinkedHashMap<CategoryData, List<MemoData>>> boardMap(
@@ -80,7 +80,7 @@ class Dao {
     return _isar.categoryDatas
         .filter()
         .boardIdEqualTo(boardData.id)
-        .sortByCreated()
+        .sortByIndex()
         .findAll();
   }
 
