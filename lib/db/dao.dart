@@ -125,9 +125,21 @@ class Dao {
     });
   }
 
+  Future putAllCategory(List<CategoryData> categoryData) {
+    return _isar.writeTxn((isar) async {
+      await isar.categoryDatas.putAll(categoryData);
+    });
+  }
+
   Future putBoard(BoardData boardData) {
     return _isar.writeTxn((isar) async {
       boardData.id = await isar.boardDatas.put(boardData);
+    });
+  }
+
+  Future putAllBoard(List<BoardData> boardData) {
+    return _isar.writeTxn((isar) async {
+      await isar.boardDatas.putAll(boardData);
     });
   }
 
