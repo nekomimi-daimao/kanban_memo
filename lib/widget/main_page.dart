@@ -14,6 +14,7 @@ import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/provider/board_providers.dart';
 import 'package:kanban_memo/provider/config_provider.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
+import 'package:kanban_memo/widget/dialog/dialog_sort_board.dart';
 import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 import 'package:kanban_memo/widget/kanban_board.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
@@ -107,6 +108,23 @@ class MainPage extends HookConsumerWidget {
           "Boards",
           textAlign: TextAlign.center,
         ).center(),
+        trailing: IconButton(
+            onPressed: () async {
+              var sortBoardDialog = SortBoardDialog.create(boards);
+              var sort = await sortBoardDialog.show(context);
+              if (sort == null) {
+                return;
+              }
+              switch (sort) {
+                case EditResultType.submit:
+                  Dao().putAllBoard(sortBoardDialog.boardData);
+                  break;
+                case EditResultType.cancel:
+                case EditResultType.delete:
+                  break;
+              }
+            },
+            icon: const Icon(Icons.sort_rounded)),
       );
       drawerItem.addAll(titleTile.divider());
 
