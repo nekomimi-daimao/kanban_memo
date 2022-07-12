@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:file_picker/file_picker.dart';
@@ -165,6 +166,8 @@ class MainPage extends HookConsumerWidget {
           return;
         }
         var newBoard = BoardData.create(boardName);
+        newBoard.index =
+            boards.isEmpty ? 0 : (boards.map((e) => e.index).max) + 1;
         await Dao().putBoard(newBoard);
       },
     );

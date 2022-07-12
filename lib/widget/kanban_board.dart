@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -82,6 +83,8 @@ class KanbanBoard extends HookConsumerWidget {
               return;
             }
             var newCategory = CategoryData.create(boardData, categoryName);
+            newCategory.index =
+                map.isEmpty ? 0 : (map.keys.map((e) => e.index).max) + 1;
             await Dao().putCategory(newCategory);
           },
         ),
