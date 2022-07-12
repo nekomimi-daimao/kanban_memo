@@ -24,6 +24,18 @@ class SortBoardDialog extends StatefulWidget {
 }
 
 class _SortBoardDialogState extends State<SortBoardDialog> {
+  void sortIndex() {
+    widget.boardData.whereNotNull().toList().asMap().forEach((key, value) {
+      value.index = key;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    sortIndex();
+  }
+
   @override
   Widget build(BuildContext context) {
     var list = ReorderableListView(
@@ -32,15 +44,19 @@ class _SortBoardDialogState extends State<SortBoardDialog> {
             .map((e) => ListTile(
                   key: Key('$e.id'),
                   title: Text(e.title),
+                  tileColor: Theme.of(context)
+                      .primaryColor
+                      .withOpacity(e.index.isOdd ? 0.5 : 0.1),
                 ))
             .toList(),
         onReorder: (int oldIndex, int newIndex) {
           if (oldIndex < newIndex) {
             newIndex -= 1;
           }
+          var item = widget.boardData.removeAt(oldIndex);
+          widget.boardData.insert(newIndex, item);
           setState(() {
-            var item = widget.boardData.removeAt(oldIndex);
-            widget.boardData.insert(newIndex, item);
+            sortIndex();
           });
         });
 
@@ -59,13 +75,7 @@ class _SortBoardDialogState extends State<SortBoardDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            widget.boardData
-                .whereNotNull()
-                .toList()
-                .asMap()
-                .forEach((key, value) {
-              value.index = key;
-            });
+            sortIndex();
             Navigator.of(context).pop(EditResultType.submit);
           },
           child: const Text("Submit"),

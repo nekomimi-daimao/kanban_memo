@@ -25,6 +25,18 @@ class SortCategoryDialog extends StatefulWidget {
 }
 
 class _SortCategoryDialogState extends State<SortCategoryDialog> {
+  void sortIndex() {
+    widget.categoryData.whereNotNull().toList().asMap().forEach((key, value) {
+      value.index = key;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    sortIndex();
+  }
+
   @override
   Widget build(BuildContext context) {
     var list = ReorderableListView(
@@ -33,15 +45,19 @@ class _SortCategoryDialogState extends State<SortCategoryDialog> {
             .map((e) => ListTile(
                   key: Key('$e.id'),
                   title: Text(e.category),
+                  tileColor: Theme.of(context)
+                      .primaryColor
+                      .withOpacity(e.index.isOdd ? 0.5 : 0.1),
                 ))
             .toList(),
         onReorder: (int oldIndex, int newIndex) {
           if (oldIndex < newIndex) {
             newIndex -= 1;
           }
+          var item = widget.categoryData.removeAt(oldIndex);
+          widget.categoryData.insert(newIndex, item);
           setState(() {
-            var item = widget.categoryData.removeAt(oldIndex);
-            widget.categoryData.insert(newIndex, item);
+            sortIndex();
           });
         });
 
@@ -60,13 +76,7 @@ class _SortCategoryDialogState extends State<SortCategoryDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            widget.categoryData
-                .whereNotNull()
-                .toList()
-                .asMap()
-                .forEach((key, value) {
-              value.index = key;
-            });
+            sortIndex();
             Navigator.of(context).pop(EditResultType.submit);
           },
           child: const Text("Submit"),
