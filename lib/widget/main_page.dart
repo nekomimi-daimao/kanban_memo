@@ -219,8 +219,8 @@ class MainPage extends HookConsumerWidget {
           .map(
             (e) => DropdownMenuItem(
               value: e,
-              child: Text(e.toString().split(".").last),
               onTap: null,
+              child: Text(e.toString().split(".").last),
             ),
           )
           .toList(),

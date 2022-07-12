@@ -44,7 +44,7 @@ class EditMemoDialog extends HookConsumerWidget {
     var memoController = ref.watch(memoEditingProvider(memoData.memo));
     return AlertDialog(
       insetPadding: const EdgeInsets.all(80),
-      content: Container(
+      content: SizedBox(
         width: dummyWidth,
         child: Column(
           children: [
@@ -100,15 +100,15 @@ class EditMemoDialog extends HookConsumerWidget {
               : () {
                   Navigator.of(context).pop(EditResultType.delete);
                 },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.red,
+          ),
           child: const Text(
             "Delete",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.red,
           ),
         ),
         OutlinedButton(
@@ -135,8 +135,8 @@ class EditMemoDialog extends HookConsumerWidget {
                   memoData.title = titleController.text;
                   memoData.memo = memoController.text;
                   ref.read(memoDataChangedProvider.notifier).state = false;
-                  await Dao().putMemo(memoData);
-                  Navigator.of(context).pop(EditResultType.submit);
+                  Dao().putMemo(memoData).then(
+                      (_) => Navigator.of(context).pop(EditResultType.submit));
                 },
           child: const Text("Submit"),
         ),
