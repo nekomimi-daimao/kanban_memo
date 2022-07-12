@@ -137,7 +137,7 @@ class KanbanBoard extends HookConsumerWidget {
         Stack(
           children: [
             addIcon,
-            Positioned(top: 40, child: sortIcon),
+            Positioned(top: 70, child: sortIcon),
           ],
         ),
       );

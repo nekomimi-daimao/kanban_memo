@@ -104,12 +104,18 @@ class MainPage extends HookConsumerWidget {
       drawerItem.addAll(drawerHeader.divider());
     } else {
       var titleTile = ListTile(
-        title: const Text(
-          "Boards",
-          textAlign: TextAlign.center,
-        ).center(),
+        title: const Center(
+          child: Text(
+            "Boards",
+            textAlign: TextAlign.left,
+          ),
+        ),
+        leading: const SizedBox.shrink(),
         trailing: Visibility(
           visible: boards.length > 1,
+          maintainAnimation: true,
+          maintainState: true,
+          maintainSize: true,
           child: IconButton(
             onPressed: () async {
               var sortBoardDialog = SortBoardDialog.create(boards);
