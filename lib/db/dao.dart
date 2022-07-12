@@ -24,6 +24,7 @@ class Dao {
   Dao._internal();
 
   late Isar _isar;
+  bool initialized = false;
 
   List<CollectionSchema<Object>> schemas = [
     MemoDataSchema,
@@ -33,6 +34,10 @@ class Dao {
   ];
 
   Future initialize() async {
+    if (initialized && _isar.isOpen) {
+      return;
+    }
+
     if (kIsWeb) {
       _isar = await Isar.open(
         schemas: schemas,
@@ -46,6 +51,7 @@ class Dao {
         directory: dir.path,
       );
     }
+    initialized = _isar.isOpen;
   }
 
   Stream<void> boardStream() {
