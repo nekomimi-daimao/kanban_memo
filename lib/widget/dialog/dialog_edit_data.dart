@@ -74,6 +74,9 @@ class EditDataDialog extends HookConsumerWidget {
                 Navigator.of(context)
                     .pop(const EditDataResult(EditResultType.delete, null));
               },
+        style: ElevatedButton.styleFrom(
+          primary: Colors.red,
+        ),
         child: Text(
           "Delete",
           style: TextStyle(
@@ -81,9 +84,6 @@ class EditDataDialog extends HookConsumerWidget {
                 ref.watch(allowDeleteProvider) ? Colors.white : Colors.white30,
             fontWeight: FontWeight.bold,
           ),
-        ),
-        style: ElevatedButton.styleFrom(
-          primary: Colors.red,
         ),
       ),
       OutlinedButton(

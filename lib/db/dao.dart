@@ -24,6 +24,7 @@ class Dao {
   Dao._internal();
 
   late Isar _isar;
+  bool initialized = false;
 
   List<CollectionSchema<Object>> schemas = [
     MemoDataSchema,
@@ -33,6 +34,10 @@ class Dao {
   ];
 
   Future initialize() async {
+    if (initialized && _isar.isOpen) {
+      return;
+    }
+
     if (kIsWeb) {
       _isar = await Isar.open(
         schemas: schemas,
@@ -46,6 +51,7 @@ class Dao {
         directory: dir.path,
       );
     }
+    initialized = _isar.isOpen;
   }
 
   Stream<void> boardStream() {
@@ -61,7 +67,7 @@ class Dao {
   }
 
   Future<List<BoardData>> allBoard() {
-    return _isar.boardDatas.where().sortByCreated().findAll();
+    return _isar.boardDatas.where().sortByIndex().findAll();
   }
 
   Future<LinkedHashMap<CategoryData, List<MemoData>>> boardMap(
@@ -80,7 +86,7 @@ class Dao {
     return _isar.categoryDatas
         .filter()
         .boardIdEqualTo(boardData.id)
-        .sortByCreated()
+        .sortByIndex()
         .findAll();
   }
 
@@ -125,9 +131,21 @@ class Dao {
     });
   }
 
+  Future putAllCategory(List<CategoryData> categoryData) {
+    return _isar.writeTxn((isar) async {
+      await isar.categoryDatas.putAll(categoryData);
+    });
+  }
+
   Future putBoard(BoardData boardData) {
     return _isar.writeTxn((isar) async {
       boardData.id = await isar.boardDatas.put(boardData);
+    });
+  }
+
+  Future putAllBoard(List<BoardData> boardData) {
+    return _isar.writeTxn((isar) async {
+      await isar.boardDatas.putAll(boardData);
     });
   }
 

@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +13,8 @@ import 'package:kanban_memo/model/memo/memo_data.dart';
 import 'package:kanban_memo/provider/board_providers.dart';
 import 'package:kanban_memo/widget/category_list.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
+import 'package:kanban_memo/widget/dialog/dialog_sort_category.dart';
+import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 import 'package:kanban_memo/widget/util/extension_widget.dart';
 
 class KanbanBoard extends HookConsumerWidget {
@@ -80,6 +83,8 @@ class KanbanBoard extends HookConsumerWidget {
               return;
             }
             var newCategory = CategoryData.create(boardData, categoryName);
+            newCategory.index =
+                map.isEmpty ? 0 : (map.keys.map((e) => e.index).max) + 1;
             await Dao().putCategory(newCategory);
           },
         ),
@@ -87,7 +92,9 @@ class KanbanBoard extends HookConsumerWidget {
     );
 
     List<Widget> list = [];
-    if (!boardData.isEmpty()) {
+    if (boardData.isEmpty()) {
+      list.add(addIcon);
+    } else {
       for (int index = 0; index < map.keys.length; index += 1) {
         final key = map.keys.elementAt(index);
         final value = map.values.elementAt(index);
@@ -100,8 +107,45 @@ class KanbanBoard extends HookConsumerWidget {
         list.add(categoryList);
       }
 
-      list.add(addIcon);
+      var sortIcon = Visibility(
+        visible: map.length > 1,
+        child: Ink(
+          decoration: const ShapeDecoration(
+            shape: CircleBorder(),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.sort_rounded),
+            iconSize: 40,
+            onPressed: () async {
+              var sortCategoryDialog =
+                  SortCategoryDialog.create(map.keys.toList());
+              var sort = await sortCategoryDialog.show(context);
+              if (sort == null) {
+                return;
+              }
+              switch (sort) {
+                case EditResultType.submit:
+                  Dao().putAllCategory(sortCategoryDialog.categoryData);
+                  break;
+                case EditResultType.cancel:
+                case EditResultType.delete:
+                  break;
+              }
+            },
+          ),
+        ),
+      );
+
+      list.add(
+        Stack(
+          children: [
+            addIcon,
+            Positioned(top: 70, child: sortIcon),
+          ],
+        ),
+      );
     }
+
     return list;
   }
 }

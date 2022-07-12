@@ -10,19 +10,19 @@ class CategoryData {
 
   int? boardId;
 
+  int index = 0;
   String category = "";
-  late DateTime created;
 
   CategoryData();
 
   CategoryData.create(BoardData boardData, this.category) {
     boardId = boardData.id;
-    created = DateTime.now().toUtc();
+    index = 0;
   }
 
   @override
   String toString() {
-    return 'CategoryData{id: $id, boardId: $boardId, category: $category, created: $created}';
+    return 'CategoryData{id: $id, boardId: $boardId, index: $index, category: $category}';
   }
 
   @override
@@ -32,10 +32,10 @@ class CategoryData {
           runtimeType == other.runtimeType &&
           id == other.id &&
           boardId == other.boardId &&
-          category == other.category &&
-          created == other.created;
+          index == other.index &&
+          category == other.category;
 
   @override
   int get hashCode =>
-      id.hashCode ^ boardId.hashCode ^ category.hashCode ^ created.hashCode;
+      id.hashCode ^ boardId.hashCode ^ index.hashCode ^ category.hashCode;
 }

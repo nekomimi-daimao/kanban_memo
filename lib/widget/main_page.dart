@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:file_picker/file_picker.dart';
@@ -14,6 +15,7 @@ import 'package:kanban_memo/model/memo/board_data.dart';
 import 'package:kanban_memo/provider/board_providers.dart';
 import 'package:kanban_memo/provider/config_provider.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_data.dart';
+import 'package:kanban_memo/widget/dialog/dialog_sort_board.dart';
 import 'package:kanban_memo/widget/dialog/enum/enum_edit_result.dart';
 import 'package:kanban_memo/widget/kanban_board.dart';
 import 'package:kanban_memo/widget/dialog/dialog_edit_text.dart';
@@ -103,10 +105,37 @@ class MainPage extends HookConsumerWidget {
       drawerItem.addAll(drawerHeader.divider());
     } else {
       var titleTile = ListTile(
-        title: const Text(
-          "Boards",
-          textAlign: TextAlign.center,
-        ).center(),
+        title: const Center(
+          child: Text(
+            "Boards",
+            textAlign: TextAlign.left,
+          ),
+        ),
+        leading: const SizedBox.shrink(),
+        trailing: Visibility(
+          visible: boards.length > 1,
+          maintainAnimation: true,
+          maintainState: true,
+          maintainSize: true,
+          child: IconButton(
+            onPressed: () async {
+              var sortBoardDialog = SortBoardDialog.create(boards);
+              var sort = await sortBoardDialog.show(context);
+              if (sort == null) {
+                return;
+              }
+              switch (sort) {
+                case EditResultType.submit:
+                  Dao().putAllBoard(sortBoardDialog.boardData);
+                  break;
+                case EditResultType.cancel:
+                case EditResultType.delete:
+                  break;
+              }
+            },
+            icon: const Icon(Icons.sort_rounded),
+          ),
+        ),
       );
       drawerItem.addAll(titleTile.divider());
 
@@ -137,6 +166,8 @@ class MainPage extends HookConsumerWidget {
           return;
         }
         var newBoard = BoardData.create(boardName);
+        newBoard.index =
+            boards.isEmpty ? 0 : (boards.map((e) => e.index).max) + 1;
         await Dao().putBoard(newBoard);
       },
     );
@@ -201,8 +232,8 @@ class MainPage extends HookConsumerWidget {
           .map(
             (e) => DropdownMenuItem(
               value: e,
-              child: Text(e.toString().split(".").last),
               onTap: null,
+              child: Text(e.toString().split(".").last),
             ),
           )
           .toList(),

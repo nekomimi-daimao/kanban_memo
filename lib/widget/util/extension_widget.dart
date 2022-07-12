@@ -36,11 +36,11 @@ extension WidgetExtension on Widget {
 
   Visibility visibility(bool visible) {
     return Visibility(
-      child: this,
       visible: visible,
       maintainSize: true,
       maintainState: true,
       maintainAnimation: true,
+      child: this,
     );
   }
 

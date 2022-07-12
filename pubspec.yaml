@@ -3,7 +3,7 @@ description: memos like kanban.
 
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.1.0
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
@@ -15,18 +15,21 @@ dependencies:
   isar_flutter_libs: ^2.5.0
   flutter_hooks: ^0.18.0
   hooks_riverpod: ^2.0.0-dev.5
-  google_fonts: ^2.3.2
+  google_fonts: ^3.0.1
   file_picker: ^4.5.1
   package_info_plus: ^1.4.2
   flutter_svg: ^1.0.3
   url_launcher: ^6.1.2
+  collection: ^1.16.0
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   isar_generator: ^2.5.0
   build_runner: any
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.1
+
 flutter:
   uses-material-design: true
   assets:

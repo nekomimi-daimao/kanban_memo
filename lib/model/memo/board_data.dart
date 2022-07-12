@@ -7,25 +7,23 @@ class BoardData {
   @Id()
   int? id;
 
+  int index = 0;
   String title = "";
-  late DateTime created;
 
   BoardData();
 
-  BoardData.create(this.title) {
-    created = DateTime.now().toUtc();
-  }
+  BoardData.create(this.title);
 
   BoardData.empty() {
     id = -1;
-    created = DateTime.fromMillisecondsSinceEpoch(0);
+    index = -1;
   }
 
   bool isEmpty() => id == -1;
 
   @override
   String toString() {
-    return 'BoardData{id: $id, title: $title, created: $created}';
+    return 'BoardData{id: $id, index: $index, title: $title}';
   }
 
   @override
@@ -34,9 +32,9 @@ class BoardData {
       other is BoardData &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          title == other.title &&
-          created == other.created;
+          index == other.index &&
+          title == other.title;
 
   @override
-  int get hashCode => id.hashCode ^ title.hashCode ^ created.hashCode;
+  int get hashCode => id.hashCode ^ index.hashCode ^ title.hashCode;
 }
