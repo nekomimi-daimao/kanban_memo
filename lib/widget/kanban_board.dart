@@ -104,29 +104,32 @@ class KanbanBoard extends HookConsumerWidget {
         list.add(categoryList);
       }
 
-      var sortIcon = Ink(
-        decoration: const ShapeDecoration(
-          shape: CircleBorder(),
-        ),
-        child: IconButton(
-          icon: const Icon(Icons.sort_rounded),
-          iconSize: 40,
-          onPressed: () async {
-            var sortCategoryDialog =
-                SortCategoryDialog.create(map.keys.toList());
-            var sort = await sortCategoryDialog.show(context);
-            if (sort == null) {
-              return;
-            }
-            switch (sort) {
-              case EditResultType.submit:
-                Dao().putAllCategory(sortCategoryDialog.categoryData);
-                break;
-              case EditResultType.cancel:
-              case EditResultType.delete:
-                break;
-            }
-          },
+      var sortIcon = Visibility(
+        visible: map.length > 1,
+        child: Ink(
+          decoration: const ShapeDecoration(
+            shape: CircleBorder(),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.sort_rounded),
+            iconSize: 40,
+            onPressed: () async {
+              var sortCategoryDialog =
+                  SortCategoryDialog.create(map.keys.toList());
+              var sort = await sortCategoryDialog.show(context);
+              if (sort == null) {
+                return;
+              }
+              switch (sort) {
+                case EditResultType.submit:
+                  Dao().putAllCategory(sortCategoryDialog.categoryData);
+                  break;
+                case EditResultType.cancel:
+                case EditResultType.delete:
+                  break;
+              }
+            },
+          ),
         ),
       );
 

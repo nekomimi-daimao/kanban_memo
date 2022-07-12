@@ -108,7 +108,9 @@ class MainPage extends HookConsumerWidget {
           "Boards",
           textAlign: TextAlign.center,
         ).center(),
-        trailing: IconButton(
+        trailing: Visibility(
+          visible: boards.length > 1,
+          child: IconButton(
             onPressed: () async {
               var sortBoardDialog = SortBoardDialog.create(boards);
               var sort = await sortBoardDialog.show(context);
@@ -124,7 +126,9 @@ class MainPage extends HookConsumerWidget {
                   break;
               }
             },
-            icon: const Icon(Icons.sort_rounded)),
+            icon: const Icon(Icons.sort_rounded),
+          ),
+        ),
       );
       drawerItem.addAll(titleTile.divider());
 
